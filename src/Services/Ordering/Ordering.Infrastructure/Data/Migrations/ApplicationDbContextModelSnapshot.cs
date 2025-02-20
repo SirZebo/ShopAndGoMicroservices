@@ -78,11 +78,14 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("MaxCompletionTime")
+                        .HasColumnType("float");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Draft");
+                        .HasDefaultValue("AwaitingPayment");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");

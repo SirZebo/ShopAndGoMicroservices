@@ -1,6 +1,6 @@
 ﻿namespace Catalog.API.Products.CreateProduct;
 
-public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price)
+public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price, TimeSpan MaxCompletionTime, string Language)
     : ICommand<CreateProductResult>;
 
 public record CreateProductResult(Guid Id);
@@ -37,7 +37,9 @@ internal class CreateProductCommandHandler
             Category = command.Category,
             Description = command.Description,
             ImageFile = command.ImageFile,
-            Price = command.Price
+            Price = command.Price,
+            MaxCompletionTime = command.MaxCompletionTime,
+            Language = command.Language,
         };
 
         // save to database

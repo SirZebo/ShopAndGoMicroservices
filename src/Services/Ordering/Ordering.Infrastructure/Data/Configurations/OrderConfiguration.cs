@@ -15,6 +15,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             dbId => OrderId.Of(dbId)
         );
 
+        builder.Property(o => o.MaxCompletionTime).HasConversion(
+            maxCompletionTime => maxCompletionTime.TotalDays,
+            maxCompletionTimeInDays => TimeSpan.FromDays(maxCompletionTimeInDays)
+        );
+
         builder.HasOne<Customer>()
             .WithMany()
             .HasForeignKey(o => o.CustomerId)
@@ -111,7 +116,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
               });
 
         builder.Property(o => o.Status)
-            .HasDefaultValue(OrderStatus.Draft)
+            .HasDefaultValue(OrderStatus.AwaitingPayment)
             .HasConversion(
                 s => s.ToString(),
                 dbStatus => (OrderStatus) Enum.Parse(typeof(OrderStatus), dbStatus));

@@ -4,7 +4,7 @@ using Catalog.API.Products.GetProductById;
 
 namespace Catalog.API.Products.UpdateProduct;
 
-public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price) : ICommand<UpdateProductResult>;
+public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price, TimeSpan MaxCompletionTime, string Language) : ICommand<UpdateProductResult>;
 
 public record UpdateProductResult(bool IsSuccess);
 
@@ -42,6 +42,8 @@ internal class UpdateProductCommandHandler
         product.Description = command.Description;
         product.ImageFile = command.ImageFile;
         product.Price = command.Price;
+        product.MaxCompletionTime = command.MaxCompletionTime;
+        product.Language = command.Language;
 
         session.Update(product);
         await session.SaveChangesAsync(cancellationToken);

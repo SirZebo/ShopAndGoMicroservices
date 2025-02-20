@@ -32,7 +32,8 @@ internal class InitialData
                             OrderName.Of("ORD_1"),
                             shippingAddress: address1,
                             billingAddress: address1,
-                            payment1);
+                            payment1,
+                            TimeSpan.FromDays(3));
             order1.Add(ProductId.Of(new Guid("5334c996-8457-4cf0-815c-ed2b77c4ff61")), 2, 500);
             order1.Add(ProductId.Of(new Guid("c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914")), 1, 400);
 
@@ -42,7 +43,8 @@ internal class InitialData
                             OrderName.Of("ORD_2"),
                             shippingAddress: address2,
                             billingAddress: address2,
-                            payment2);
+                            payment2,
+                            TimeSpan.FromDays(3));
             order2.Add(ProductId.Of(new Guid("4f136e9f-ff8c-4c1f-9a33-d12f689bdab8")), 1, 650);
             order2.Add(ProductId.Of(new Guid("6ec1297b-ec0a-4aa1-be25-6726e3b51a27")), 2, 450);
 

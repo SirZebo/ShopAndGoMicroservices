@@ -24,10 +24,11 @@ public class CreateOrderCommandHandler
             id: OrderId.Of(Guid.NewGuid()),
             customerId: CustomerId.Of(orderDto.CustomerId),
             orderName: OrderName.Of(orderDto.OrderName),
-                shippingAddress: shippingAddress,
-                billingAddress: billingAddress,
-                payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
-                );
+            shippingAddress: shippingAddress,
+            billingAddress: billingAddress,
+            payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod),
+            maxCompletionTime: orderDto.MaxCompletionTime
+        );
 
         foreach (var orderItemDto in orderDto.OrderItems)
         {

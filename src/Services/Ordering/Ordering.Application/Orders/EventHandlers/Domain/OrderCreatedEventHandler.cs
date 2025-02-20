@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using BuildingBlocks.Messaging.Events;
+using MassTransit;
 using Microsoft.FeatureManagement;
 
 namespace Ordering.Application.Orders.EventHandlers.Domain;
@@ -12,11 +13,15 @@ public class OrderCreatedEventHandler
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", domainEvent.GetType().Name);
 
-        if (await featureManager.IsEnabledAsync("OrderFulfillment"))
-        {
-            var orderCreatedIntegrationEvent = domainEvent.Order.ToOrderDto();
+        //var orderCreatedIntegrationEvent = domainEvent.Order.ToOrderDto();
 
-            await publishEndpoint.Publish(orderCreatedIntegrationEvent, cancellationToken);
-        }
+        //await publishEndpoint.Publish(orderCreatedIntegrationEvent, cancellationToken);
+        var paymentStartedIntegrationEvent = new PaymentStartedEvent
+        {
+            OrderId = domainEvent.Order.Id.Value,
+            TotalPrice = domainEvent.Order.TotalPrice
+        };
+
+        await publishEndpoint.Publish(paymentStartedIntegrationEvent, cancellationToken);
     }
 }

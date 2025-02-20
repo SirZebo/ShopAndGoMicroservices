@@ -13,8 +13,8 @@ using Ordering.Infrastructure.Data;
 namespace Ordering.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241019082117_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250220093057_InitCreate")]
+    partial class InitCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,11 +81,14 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("MaxCompletionTime")
+                        .HasColumnType("float");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Draft");
+                        .HasDefaultValue("AwaitingPayment");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");

@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using BuildingBlocks.Messaging.MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Automatically does DI of our handlers through assembly reflection
 var assembly = typeof(Program).Assembly;
+builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
@@ -16,7 +18,7 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 
-builder.Services.AddCarter();
+
 
 builder.Services.AddMarten(opts =>
 {
@@ -28,6 +30,12 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+// Async Communication Services
+builder.Services.AddMessageBroker(builder.Configuration);
+
+// Cross-Cutting Services
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
@@ -35,9 +43,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline automatically instead of DI in every time a new endpoint is created
 app.MapCarter();
-
 app.UseExceptionHandler(options => { });
-
 app.UseHealthChecks("/health",
     new HealthCheckOptions
     {
