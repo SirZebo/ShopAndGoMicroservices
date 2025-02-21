@@ -12,7 +12,8 @@ public static class OrderExtensions
             Payment: new PaymentDto(order.Payment.CardName!, order.Payment.CardNumber, order.Payment.Expiration, order.Payment.CVV, order.Payment.PaymentMethod),
             Status: order.Status,
             OrderItems: order.OrderItems.Select(oi => new OrderItemDto(oi.OrderId.Value, oi.ProductId.Value, oi.Quantity, oi.Price)).ToList(),
-            MaxCompletionTime: order.MaxCompletionTime
+            MaxCompletionTime: order.MaxCompletionTime,
+            TotalPrice: order.TotalPrice
         ));
     }
 
@@ -32,7 +33,8 @@ public static class OrderExtensions
                     Payment: new PaymentDto(order.Payment.CardName!, order.Payment.CardNumber, order.Payment.Expiration, order.Payment.CVV, order.Payment.PaymentMethod),
                     Status: order.Status,
                     OrderItems: order.OrderItems.Select(oi => new OrderItemDto(oi.OrderId.Value, oi.ProductId.Value, oi.Quantity, oi.Price)).ToList(),
-                    MaxCompletionTime: order.MaxCompletionTime
+                    MaxCompletionTime: order.MaxCompletionTime,
+                    TotalPrice: order.TotalPrice
                 );
     }
 

@@ -5,23 +5,40 @@ using Microsoft.FeatureManagement;
 namespace Ordering.Application.Orders.EventHandlers.Domain;
 public class OrderCreatedEventHandler
     (IPublishEndpoint publishEndpoint,
-    IFeatureManager featureManager,
     ILogger<OrderCreatedEventHandler> logger)
-    : INotificationHandler<OrderCreatedEvent>
+    : INotificationHandler<Ordering.Domain.Events.OrderCreatedEvent>
 {
-    public async Task Handle(OrderCreatedEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(Ordering.Domain.Events.OrderCreatedEvent domainEvent, CancellationToken cancellationToken)
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", domainEvent.GetType().Name);
 
-        //var orderCreatedIntegrationEvent = domainEvent.Order.ToOrderDto();
+        var orderDto = domainEvent.Order.ToOrderDto();
+        var orderCreatedIntegrationEvent = MapToOrderCreatedIntegrationEvent(orderDto);
 
-        //await publishEndpoint.Publish(orderCreatedIntegrationEvent, cancellationToken);
-        var paymentStartedIntegrationEvent = new PaymentStartedEvent
+        await publishEndpoint.Publish(orderCreatedIntegrationEvent, cancellationToken);
+    }
+
+    public BuildingBlocks.Messaging.Events.OrderCreatedEvent MapToOrderCreatedIntegrationEvent(OrderDto orderDto)
+    {
+        return new BuildingBlocks.Messaging.Events.OrderCreatedEvent
         {
-            OrderId = domainEvent.Order.Id.Value,
-            TotalPrice = domainEvent.Order.TotalPrice
+            OrderId = orderDto.Id,
+            CustomerId = orderDto.CustomerId,
+            TotalPrice = orderDto.TotalPrice,
+            MaxCompletionTime = orderDto.MaxCompletionTime
+            // Additional Feature, Auto input payment
+            //,
+            //FirstName = orderDto.BillingAddress.FirstName,
+            //LastName = orderDto.BillingAddress.LastName,
+            //EmailAddress = orderDto.BillingAddress.EmailAddress,
+            //AddressLine = orderDto.BillingAddress.AddressLine,
+            //Country = orderDto.BillingAddress.Country,
+            //State = orderDto.BillingAddress.State,
+            //ZipCode = orderDto.BillingAddress.ZipCode,
+            //CardName = orderDto.Payment.CardName,
+            //CardNumber = orderDto.Payment.CardNumber,
+            //Expiration = orderDto.Payment.Expiration,
+            //CVV = orderDto.Payment.Cvv
         };
-
-        await publishEndpoint.Publish(paymentStartedIntegrationEvent, cancellationToken);
     }
 }

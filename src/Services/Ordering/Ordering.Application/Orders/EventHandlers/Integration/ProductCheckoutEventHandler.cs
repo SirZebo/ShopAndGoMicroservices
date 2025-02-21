@@ -31,6 +31,7 @@ public class ProductCheckoutEventHandler
             Payment: paymentDto,
             Status: Ordering.Domain.Enums.OrderStatus.AwaitingPayment,
             MaxCompletionTime: message.MaxCompletionTime,
+            TotalPrice: message.TotalPrice,
             OrderItems:
             [
                 new OrderItemDto(orderId, message.ProductId, message.Quantity, message.Price),

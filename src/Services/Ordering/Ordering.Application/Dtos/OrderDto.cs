@@ -10,4 +10,5 @@ public record OrderDto(
     PaymentDto Payment,
     OrderStatus Status,
     List<OrderItemDto> OrderItems,
-    TimeSpan MaxCompletionTime);
+    TimeSpan MaxCompletionTime,
+    decimal TotalPrice);
