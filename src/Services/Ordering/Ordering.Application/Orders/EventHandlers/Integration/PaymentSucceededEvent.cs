@@ -30,8 +30,6 @@ public class PaymentSucceededEventHandler
                 TransactionToken: Guid.Empty,
                 OrderName: null,
                 ShippingAddress: null,
-                BillingAddress: null,
-                Payment: null,
                 OrderItems: null,
                 MaxCompletionTime: TimeSpan.Zero,
                 Status: Ordering.Domain.Enums.OrderStatus.InProgress,

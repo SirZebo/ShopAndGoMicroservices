@@ -7,8 +7,6 @@ public class Order : Aggregate<OrderId>
     public Guid TransactionToken { get; private set; } = default!;
     public OrderName OrderName { get; private set; } = default!;
     public Address ShippingAddress { get; private set; } = default!;
-    public Address BillingAddress { get; private set; } = default!;
-    public Payment Payment { get; private set; } = default!;
     public OrderStatus Status { get; private set; } = OrderStatus.AwaitingPayment;
     public TimeSpan MaxCompletionTime { get; private set; } = default!;
     public decimal TotalPrice
@@ -17,7 +15,7 @@ public class Order : Aggregate<OrderId>
         private set { }
     }
 
-    public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, TimeSpan maxCompletionTime)
+    public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, TimeSpan maxCompletionTime)
     {
         var order = new Order
         {
@@ -25,8 +23,6 @@ public class Order : Aggregate<OrderId>
             CustomerId = customerId,
             OrderName = orderName,
             ShippingAddress = shippingAddress,
-            BillingAddress = billingAddress,
-            Payment = payment,
             Status = OrderStatus.AwaitingPayment,
             MaxCompletionTime = maxCompletionTime,
         };
@@ -36,12 +32,10 @@ public class Order : Aggregate<OrderId>
         return order;
     }
 
-    public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
+    public void Update(OrderName orderName, Address shippingAddress, OrderStatus status)
     {
         OrderName = orderName;
         ShippingAddress = shippingAddress;
-        BillingAddress = billingAddress;
-        Payment = payment;
         Status = status;
 
         AddDomainEvent(new OrderUpdatedEvent(this));

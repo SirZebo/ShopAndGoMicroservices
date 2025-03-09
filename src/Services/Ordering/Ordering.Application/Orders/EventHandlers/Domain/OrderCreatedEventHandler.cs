@@ -27,19 +27,6 @@ public class OrderCreatedEventHandler
             TransactionToken = orderDto.TransactionToken,
             TotalPrice = orderDto.TotalPrice,
             MaxCompletionTime = orderDto.MaxCompletionTime
-            // Additional Feature, Auto input payment
-            //,
-            //FirstName = orderDto.BillingAddress.FirstName,
-            //LastName = orderDto.BillingAddress.LastName,
-            //EmailAddress = orderDto.BillingAddress.EmailAddress,
-            //AddressLine = orderDto.BillingAddress.AddressLine,
-            //Country = orderDto.BillingAddress.Country,
-            //State = orderDto.BillingAddress.State,
-            //ZipCode = orderDto.BillingAddress.ZipCode,
-            //CardName = orderDto.Payment.CardName,
-            //CardNumber = orderDto.Payment.CardNumber,
-            //Expiration = orderDto.Payment.Expiration,
-            //CVV = orderDto.Payment.Cvv
         };
     }
 }

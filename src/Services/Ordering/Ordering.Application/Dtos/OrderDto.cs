@@ -7,8 +7,6 @@ public record OrderDto(
     Guid TransactionToken,
     string OrderName,
     AddressDto ShippingAddress,
-    AddressDto BillingAddress,
-    PaymentDto Payment,
     OrderStatus Status,
     List<OrderItemDto> OrderItems,
     TimeSpan MaxCompletionTime,

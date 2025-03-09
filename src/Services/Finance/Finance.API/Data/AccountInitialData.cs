@@ -29,6 +29,18 @@ public class AccountInitialData : IInitialData
                     Name = "Ambrose",
                     Balance = 0
                 },
+                new Account()
+                {
+                    Id = new Guid("58c49479-ec65-4de2-86e7-033c546291aa"),
+                    Name = "mehmet",
+                    Balance = 0
+                },
+                new Account()
+                {
+                    Id = new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                    Name = "john",
+                    Balance = 0
+                },
 
             };
 }

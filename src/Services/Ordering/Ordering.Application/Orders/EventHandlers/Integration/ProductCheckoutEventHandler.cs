@@ -19,7 +19,6 @@ public class ProductCheckoutEventHandler
     {
         // Create full order with incoming event data
         var addressDto = new AddressDto(message.FirstName, message.LastName, message.EmailAddress, message.AddressLine, message.Country, message.State, message.ZipCode);
-        var paymentDto = new PaymentDto(message.CardName, message.CardNumber, message.Expiration, message.CVV, message.PaymentMethod);
         var orderId = Guid.NewGuid();
 
         var orderDto = new OrderDto(
@@ -28,8 +27,6 @@ public class ProductCheckoutEventHandler
             CustomerId: message.CustomerId,
             OrderName: message.UserName,
             ShippingAddress: addressDto,
-            BillingAddress: addressDto,
-            Payment: paymentDto,
             Status: Ordering.Domain.Enums.OrderStatus.AwaitingPayment,
             MaxCompletionTime: message.MaxCompletionTime,
             TotalPrice: message.TotalPrice,

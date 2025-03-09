@@ -93,45 +93,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<Guid>("TransactionToken")
                         .HasColumnType("uniqueidentifier");
 
-                    b.ComplexProperty<Dictionary<string, object>>("BillingAddress", "Ordering.Domain.Models.Order.BillingAddress#Address", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("AddressLine")
-                                .IsRequired()
-                                .HasMaxLength(180)
-                                .HasColumnType("nvarchar(180)");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("EmailAddress")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasMaxLength(5)
-                                .HasColumnType("nvarchar(5)");
-                        });
-
                     b.ComplexProperty<Dictionary<string, object>>("OrderName", "Ordering.Domain.Models.Order.OrderName#OrderName", b1 =>
                         {
                             b1.IsRequired();
@@ -141,33 +102,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)")
                                 .HasColumnName("OrderName");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Payment", "Ordering.Domain.Models.Order.Payment#Payment", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("CVV")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)");
-
-                            b1.Property<string>("CardName")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("CardNumber")
-                                .IsRequired()
-                                .HasMaxLength(24)
-                                .HasColumnType("nvarchar(24)");
-
-                            b1.Property<string>("Expiration")
-                                .IsRequired()
-                                .HasMaxLength(10)
-                                .HasColumnType("nvarchar(10)");
-
-                            b1.Property<int>("PaymentMethod")
-                                .HasColumnType("int");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "Ordering.Domain.Models.Order.ShippingAddress#Address", b1 =>

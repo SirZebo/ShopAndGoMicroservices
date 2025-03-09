@@ -41,8 +41,6 @@ public class UpdateOrderStatusHandler
         order.Update(
             orderName: order.OrderName,
             shippingAddress: order.ShippingAddress,
-            billingAddress: order.BillingAddress,
-            payment: order.Payment,
             status: orderDto.Status
             );
     }
