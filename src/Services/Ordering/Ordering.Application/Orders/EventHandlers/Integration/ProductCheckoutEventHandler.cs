@@ -24,6 +24,7 @@ public class ProductCheckoutEventHandler
 
         var orderDto = new OrderDto(
             Id: orderId,
+            TransactionToken: message.TransactionToken,
             CustomerId: message.CustomerId,
             OrderName: message.UserName,
             ShippingAddress: addressDto,

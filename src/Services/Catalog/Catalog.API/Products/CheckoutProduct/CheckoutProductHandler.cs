@@ -7,15 +7,13 @@ namespace Catalog.API.Products.CheckoutProduct;
 public record CheckoutProductCommand(CheckoutProductDto CheckoutProductDto)
     : ICommand<CheckoutProductResult>;
 
-public record CheckoutProductResult(bool IsSuccess);
+public record CheckoutProductResult(Guid TransactionToken);
 
 public class CheckoutProductCommandValidator
     : AbstractValidator<CheckoutProductCommand>
 {
     public CheckoutProductCommandValidator()
     {
-        RuleFor(x => x.CheckoutProductDto)
-            .NotNull().WithMessage("CheckoutProductDto can't be null");
         RuleFor(x => x.CheckoutProductDto.CustomerId)
             .NotEmpty().WithMessage("CustomerId is required");
         RuleFor(x => x.CheckoutProductDto.ProductId)
@@ -38,6 +36,7 @@ public class CheckoutProductCommandHandler
             throw new ProductNotFoundException(command.CheckoutProductDto.ProductId);
         }
 
+        command.CheckoutProductDto.TransactionToken = Guid.NewGuid();
         var eventMessage = command.CheckoutProductDto.Adapt<ProductCheckoutEvent>();
         var totalPrice = CalculateTotalPrice(product, command.CheckoutProductDto.Quantity);
 
@@ -46,7 +45,7 @@ public class CheckoutProductCommandHandler
 
         await publishEndpoint.Publish(eventMessage, cancellationToken);
 
-        return new CheckoutProductResult(true);
+        return new CheckoutProductResult(command.CheckoutProductDto.TransactionToken);
     }
 
     private decimal CalculateTotalPrice(Product product, int quantity)

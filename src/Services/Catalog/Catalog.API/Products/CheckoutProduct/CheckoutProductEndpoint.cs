@@ -4,13 +4,13 @@ namespace Catalog.API.Products.CheckoutProduct;
 
 public record CheckoutProductRequest(CheckoutProductDto CheckoutProductDto);
 
-public record CheckoutProductResponse(bool isSuccess);
+public record CheckoutProductResponse(Guid TransactionToken);
 
 public class CheckoutProductEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/product/checkout", async (CheckoutProductDto request, ISender sender) =>
+        app.MapPost("/product/checkout", async (CheckoutProductRequest request, ISender sender) =>
         {
             var command = request.Adapt<CheckoutProductCommand>();
 

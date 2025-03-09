@@ -6,6 +6,7 @@ public static class OrderExtensions
         return orders.Select(order => new OrderDto(
             Id: order.Id.Value,
             CustomerId: order.CustomerId.Value,
+            TransactionToken: order.TransactionToken,
             OrderName: order.OrderName.Value,
             ShippingAddress: new AddressDto(order.ShippingAddress.FirstName, order.ShippingAddress.LastName, order.ShippingAddress.EmailAddress!, order.ShippingAddress.AddressLine, order.ShippingAddress.Country, order.ShippingAddress.State, order.ShippingAddress.ZipCode),
             BillingAddress: new AddressDto(order.BillingAddress.FirstName, order.BillingAddress.LastName, order.BillingAddress.EmailAddress!, order.BillingAddress.AddressLine, order.BillingAddress.Country, order.BillingAddress.State, order.BillingAddress.ZipCode),
@@ -27,6 +28,7 @@ public static class OrderExtensions
         return new OrderDto(
                     Id: order.Id.Value,
                     CustomerId: order.CustomerId.Value,
+                    TransactionToken: order.TransactionToken,
                     OrderName: order.OrderName.Value,
                     ShippingAddress: new AddressDto(order.ShippingAddress.FirstName, order.ShippingAddress.LastName, order.ShippingAddress.EmailAddress!, order.ShippingAddress.AddressLine, order.ShippingAddress.Country, order.ShippingAddress.State, order.ShippingAddress.ZipCode),
                     BillingAddress: new AddressDto(order.BillingAddress.FirstName, order.BillingAddress.LastName, order.BillingAddress.EmailAddress!, order.BillingAddress.AddressLine, order.BillingAddress.Country, order.BillingAddress.State, order.BillingAddress.ZipCode),

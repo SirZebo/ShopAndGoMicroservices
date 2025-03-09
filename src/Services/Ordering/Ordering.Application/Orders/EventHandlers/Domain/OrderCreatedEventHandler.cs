@@ -24,6 +24,7 @@ public class OrderCreatedEventHandler
         {
             OrderId = orderDto.Id,
             CustomerId = orderDto.CustomerId,
+            TransactionToken = orderDto.TransactionToken,
             TotalPrice = orderDto.TotalPrice,
             MaxCompletionTime = orderDto.MaxCompletionTime
             // Additional Feature, Auto input payment

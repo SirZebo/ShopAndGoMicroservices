@@ -27,6 +27,7 @@ public class PaymentSucceededEventHandler
             (
                 Id: message.Id,
                 CustomerId: Guid.Empty,
+                TransactionToken: Guid.Empty,
                 OrderName: null,
                 ShippingAddress: null,
                 BillingAddress: null,

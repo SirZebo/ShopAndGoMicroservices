@@ -4,6 +4,7 @@ public record ProductCheckoutEvent : IntegrationEvent
     public string UserName { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
     public Guid ProductId { get; set; } = default!;
+    public Guid TransactionToken { get; set; } = default!;
     public decimal Price { get; set; }
     public int Quantity { get; set; } = default!;
     public decimal TotalPrice { get; set; } = default!;

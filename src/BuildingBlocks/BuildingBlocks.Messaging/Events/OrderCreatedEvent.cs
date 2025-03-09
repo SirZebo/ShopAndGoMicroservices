@@ -4,6 +4,7 @@ public record OrderCreatedEvent : IntegrationEvent
 {
     public Guid OrderId { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
+    public Guid TransactionToken { get; set; } = default!;
     public decimal TotalPrice { get; set; } = default!;
     public TimeSpan MaxCompletionTime { get; set; } = default!;
 
