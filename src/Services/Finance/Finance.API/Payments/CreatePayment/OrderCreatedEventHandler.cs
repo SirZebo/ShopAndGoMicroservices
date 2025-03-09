@@ -23,6 +23,7 @@ public class OrderCreatedEventHandler
         {
             Id = Guid.Empty,
             CustomerId = context.Message.CustomerId,
+            OrderId = context.Message.OrderId,
             TransactionToken = context.Message.TransactionToken,
             TotalPrice = context.Message.TotalPrice
         };

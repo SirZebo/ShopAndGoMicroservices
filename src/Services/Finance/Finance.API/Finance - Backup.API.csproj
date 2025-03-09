@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Accounts\UpdateAccount\" />
+    <Folder Include="Payments\NewFolder\" />
   </ItemGroup>
 
 </Project>

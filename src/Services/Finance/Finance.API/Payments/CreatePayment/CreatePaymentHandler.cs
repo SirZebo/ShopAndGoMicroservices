@@ -1,5 +1,7 @@
 ﻿using BuildingBlocks.Messaging.Events;
 using Finance.API.Dtos;
+using Finance.API.Exceptions;
+using Finance.API.Payments.MakePayment;
 using MassTransit;
 
 namespace Finance.API.Payments.CreatePayment;
@@ -10,7 +12,7 @@ public record CreatePaymentCommand(PaymentDto Payment)
 public record CreatePaymentResult(Guid Id);
 
 public class CreatePaymentCommandHandler
-    (IPublishEndpoint publishEndpoint, IDocumentSession session)
+    (IPublishEndpoint publishEndpoint, IDocumentSession session, ISender sender)
     : ICommandHandler<CreatePaymentCommand, CreatePaymentResult>
 {
     public async Task<CreatePaymentResult> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
@@ -23,6 +25,20 @@ public class CreatePaymentCommandHandler
             TotalPrice = command.Payment.TotalPrice,
         };
 
+        
+        var account = await session.LoadAsync<Account>(command.Payment.CustomerId, cancellationToken);
+        if (account == null)
+        {
+            throw new AccountNotFoundException(command.Payment.CustomerId);
+        }
+
+        var outstandingAmount = payment.TotalPrice - account.Balance;
+        if (outstandingAmount < 0)
+        {
+            outstandingAmount = 0;
+        }
+
+        payment.OutstandingAmount = outstandingAmount;
         // save to database
         session.Store(payment);
         await session.SaveChangesAsync(cancellationToken);
@@ -30,25 +46,22 @@ public class CreatePaymentCommandHandler
         var eventMessage = payment.Adapt<PaymentCreatedEvent>();
         await publishEndpoint.Publish(eventMessage, cancellationToken);
 
-        var account = await session.LoadAsync<Account>(command.Payment.CustomerId, cancellationToken);
-        if (account == null)
+        if (payment.OutstandingAmount != 0)
         {
-            // Throw Exception
+            var commercePayStartedEvent = new CommercePayStartedEvent
+            {
+                PaymentId = payment.Id,
+                TransactionToken = payment.TransactionToken,
+                TransactionAmount = payment.OutstandingAmount
+            };
+            await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+        } else
+        {
+            var makePaymentCommand = new MakePaymentCommand(payment.Id);
+            await sender.Send(makePaymentCommand);
         }
 
-        var outstandingPayment = payment.TotalPrice - account.Balance;
-        if (outstandingPayment < 0)
-        {
-            outstandingPayment = 0;
-        }
-
-        var commercePayStartedEvent = new CommercePayStartedEvent
-        {
-            PaymentId = payment.Id,
-            TransactionToken = payment.TransactionToken,
-            TransactionAmount = outstandingPayment
-        };
-        await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+        
 
         // return result
         return new CreatePaymentResult(payment.Id);

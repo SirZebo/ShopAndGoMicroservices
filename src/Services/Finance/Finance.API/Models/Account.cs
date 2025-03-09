@@ -1,7 +1,11 @@
-﻿namespace Finance.API.Models;
+﻿using Marten.Schema;
 
+namespace Finance.API.Models;
+
+[UseOptimisticConcurrency]
 public class Account
 {
-    public Guid CustomerId {  get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
     public decimal Balance { get; set; } = 0;
 }
