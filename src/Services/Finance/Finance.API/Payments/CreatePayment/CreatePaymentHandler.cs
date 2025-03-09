@@ -8,9 +8,6 @@ public record CreatePaymentCommand(PaymentDto Payment)
     : ICommand<CreatePaymentResult>;
 
 public record CreatePaymentResult(Guid Id);
-public class CreatePaymentCommandHandler
-{
-}
 
 public class CreatePaymentCommandHandler
     (IPublishEndpoint publishEndpoint, IDocumentSession session)
@@ -21,6 +18,7 @@ public class CreatePaymentCommandHandler
         var payment = new Payment
         {
             Id = Guid.NewGuid(),
+            CustomerId = command.Payment.CustomerId,
             TransactionToken = command.Payment.TransactionToken,
             TotalPrice = command.Payment.TotalPrice,
         };
@@ -31,6 +29,26 @@ public class CreatePaymentCommandHandler
 
         var eventMessage = payment.Adapt<PaymentCreatedEvent>();
         await publishEndpoint.Publish(eventMessage, cancellationToken);
+
+        var account = await session.LoadAsync<Account>(command.Payment.CustomerId, cancellationToken);
+        if (account == null)
+        {
+            // Throw Exception
+        }
+
+        var outstandingPayment = payment.TotalPrice - account.Balance;
+        if (outstandingPayment < 0)
+        {
+            outstandingPayment = 0;
+        }
+
+        var commercePayStartedEvent = new CommercePayStartedEvent
+        {
+            PaymentId = payment.Id,
+            TransactionToken = payment.TransactionToken,
+            TransactionAmount = outstandingPayment
+        };
+        await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
 
         // return result
         return new CreatePaymentResult(payment.Id);

@@ -22,6 +22,7 @@ public class OrderCreatedEventHandler
         return new PaymentDto
         {
             Id = Guid.Empty,
+            CustomerId = context.Message.CustomerId,
             TransactionToken = context.Message.TransactionToken,
             TotalPrice = context.Message.TotalPrice
         };
