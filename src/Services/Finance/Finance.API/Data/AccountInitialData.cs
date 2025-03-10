@@ -11,12 +11,6 @@ public class AccountInitialData : IInitialData
             return;
 
         session.Store<Account>(GetPreconfiguredAccounts());
-        //session.Store<Account>(new Account()
-        //{
-        //    Id = new Guid("14534836-bdbe-4dbe-af1c-80f9d5f433c2"),
-        //    Name = "Darren",
-        //    Balance = 1000
-        //});
 
         await session.SaveChangesAsync();
     }
