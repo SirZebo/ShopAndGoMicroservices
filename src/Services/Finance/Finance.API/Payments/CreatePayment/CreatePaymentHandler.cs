@@ -43,7 +43,7 @@ public class CreatePaymentCommandHandler
         session.Store(payment);
         await session.SaveChangesAsync(cancellationToken);
 
-        var eventMessage = payment.Adapt<PaymentCreatedEvent>();
+        var eventMessage = MapToPaymentCreatedEvent(payment);
         await publishEndpoint.Publish(eventMessage, cancellationToken);
 
         if (payment.OutstandingAmount != 0)
@@ -65,6 +65,16 @@ public class CreatePaymentCommandHandler
 
         // return result
         return new CreatePaymentResult(payment.Id);
+    }
+
+    private PaymentCreatedEvent MapToPaymentCreatedEvent(Payment payment)
+    {
+        return new PaymentCreatedEvent
+        {
+            PaymentId = payment.Id,
+            TransactionToken = payment.TransactionToken,
+            TotalPrice = payment.TotalPrice,
+        };
     }
 
 }
