@@ -15,12 +15,13 @@ public class Order : Aggregate<OrderId>
         private set { }
     }
 
-    public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, TimeSpan maxCompletionTime)
+    public static Order Create(OrderId id, CustomerId customerId, Guid transactionToken ,OrderName orderName, Address shippingAddress, TimeSpan maxCompletionTime)
     {
         var order = new Order
         {
             Id = id,
             CustomerId = customerId,
+            TransactionToken = transactionToken,
             OrderName = orderName,
             ShippingAddress = shippingAddress,
             Status = OrderStatus.AwaitingPayment,

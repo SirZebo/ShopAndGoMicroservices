@@ -21,6 +21,7 @@ public class CreatePaymentCommandHandler
         {
             Id = Guid.NewGuid(),
             CustomerId = command.Payment.CustomerId,
+            OrderId = command.Payment.OrderId,
             TransactionToken = command.Payment.TransactionToken,
             TotalPrice = command.Payment.TotalPrice,
         };

@@ -34,7 +34,8 @@ public class DeletePaymentHandlerCommandHandler
         await session.SaveChangesAsync();
 
         var paymentDeletedEvent = new PaymentDeletedEvent {
-            PaymentId = payment.OrderId,
+            PaymentId = payment.Id,
+            OrderId = payment.OrderId,
         };
         await publishEndpoint.Publish(paymentDeletedEvent, cancellationToken);
 
