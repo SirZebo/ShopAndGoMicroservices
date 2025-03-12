@@ -20,7 +20,6 @@ public class UpdateOrderStatusHandler
         var order = await dbContext.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
-            //.FindAsync([orderId], cancellationToken: cancellationToken);
 
         if (order is null)
         {
@@ -32,7 +31,8 @@ public class UpdateOrderStatusHandler
         dbContext.Orders.Update(order);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        await publishEndpoint.Publish(order);
+        var eventMessage = MapToOrderUpdatedToInProgressEvent(order);
+        await publishEndpoint.Publish(eventMessage);
 
         return new UpdateOrderStatusResult(true);
 

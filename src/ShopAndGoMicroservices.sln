@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Finance.API", "Services\Fin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JobScheduler", "JobScheduler", "{6A5679B6-B93A-4113-81A5-4D5CBCB618F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobScheduler.API", "Services\JobScheduler\JobScheduler.API\JobScheduler.API.csproj", "{C4C53A97-DC67-4B1A-A9D4-03F45F8A696F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduler.API", "Services\JobScheduler\JobScheduler.API\JobScheduler.API.csproj", "{C4C53A97-DC67-4B1A-A9D4-03F45F8A696F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
