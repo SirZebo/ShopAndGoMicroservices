@@ -15,6 +15,9 @@ services:
 
   financedb:
     image: postgres
+  
+  trackingedb:
+    image: postgres
 
   jobschedulerdb:
     image: mcr.microsoft.com/mssql/server
@@ -61,6 +64,7 @@ services:
 volumes:
   postgres_catalog:
   postgres_finance:
+  postgres_tracking:
   # postgres_basket:  
 
 
