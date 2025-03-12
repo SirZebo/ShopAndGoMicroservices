@@ -33,7 +33,7 @@ public class AccountInitialData : IInitialData
                 {
                     Id = new Guid("58c49479-ec65-4de2-86e7-033c546291aa"),
                     Name = "mehmet",
-                    Balance = 0
+                    Balance = 1000
                 },
                 new Account()
                 {

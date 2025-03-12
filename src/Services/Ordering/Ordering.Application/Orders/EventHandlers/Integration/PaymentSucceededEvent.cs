@@ -25,7 +25,7 @@ public class PaymentSucceededEventHandler
     {
         var orderDto = new OrderDto
             (
-                Id: message.Id,
+                Id: message.OrderId,
                 CustomerId: Guid.Empty,
                 TransactionToken: Guid.Empty,
                 OrderName: null,

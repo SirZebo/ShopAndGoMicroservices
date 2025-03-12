@@ -18,7 +18,9 @@ public class UpdateOrderStatusHandler
     {
         var orderId = OrderId.Of(command.Order.Id);
         var order = await dbContext.Orders
-            .FindAsync([orderId], cancellationToken: cancellationToken);
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
+            //.FindAsync([orderId], cancellationToken: cancellationToken);
 
         if (order is null)
         {
