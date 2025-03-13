@@ -53,6 +53,7 @@ public class UpdateOrderStatusHandler
         {
             OrderId = order.Id.Value,
             CustomerId = order.CustomerId.Value,
+            MerchantId = order.MerchantId,
             ProductId = order.OrderItems[0].Id.Value,
             Quantity = order.OrderItems[0].Quantity,
             MaxCompletionTime = order.MaxCompletionTime,

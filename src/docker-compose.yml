@@ -16,7 +16,7 @@ services:
   financedb:
     image: postgres
   
-  trackingedb:
+  trackingdb:
     image: postgres
 
   jobschedulerdb:

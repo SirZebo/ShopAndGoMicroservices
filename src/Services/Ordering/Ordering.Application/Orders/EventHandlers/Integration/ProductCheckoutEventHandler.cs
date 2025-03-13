@@ -25,6 +25,7 @@ public class ProductCheckoutEventHandler
             Id: orderId,
             TransactionToken: message.TransactionToken,
             CustomerId: message.CustomerId,
+            MerchantId: message.MerchantId,
             OrderName: message.UserName,
             ShippingAddress: addressDto,
             Status: Ordering.Domain.Enums.OrderStatus.AwaitingPayment,

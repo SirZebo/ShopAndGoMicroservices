@@ -3,6 +3,7 @@ public record OrderUpdatedToInProgressEvent : IntegrationEvent
 {
     public Guid OrderId { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
+    public Guid MerchantId { get; set; } = default!;
     public Guid ProductId { get; set; } = default!;
     public int Quantity { get; set; } = default!;
     public TimeSpan MaxCompletionTime { get; set; }

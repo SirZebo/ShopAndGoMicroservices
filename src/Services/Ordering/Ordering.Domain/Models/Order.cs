@@ -4,6 +4,7 @@ public class Order : Aggregate<OrderId>
     private readonly List<OrderItem> _orderItems = new();
     public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
     public CustomerId CustomerId { get; private set; } = default!;
+    public Guid MerchantId { get; private set; } = default!;
     public Guid TransactionToken { get; private set; } = default!;
     public OrderName OrderName { get; private set; } = default!;
     public Address ShippingAddress { get; private set; } = default!;
@@ -15,12 +16,13 @@ public class Order : Aggregate<OrderId>
         private set { }
     }
 
-    public static Order Create(OrderId id, CustomerId customerId, Guid transactionToken ,OrderName orderName, Address shippingAddress, TimeSpan maxCompletionTime)
+    public static Order Create(OrderId id, CustomerId customerId, Guid merchantId, Guid transactionToken ,OrderName orderName, Address shippingAddress, TimeSpan maxCompletionTime)
     {
         var order = new Order
         {
             Id = id,
             CustomerId = customerId,
+            MerchantId = merchantId,
             TransactionToken = transactionToken,
             OrderName = orderName,
             ShippingAddress = shippingAddress,

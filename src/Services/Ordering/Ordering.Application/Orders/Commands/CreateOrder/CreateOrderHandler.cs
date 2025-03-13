@@ -21,6 +21,7 @@ public class CreateOrderCommandHandler
         var newOrder = Order.Create(
             id: OrderId.Of(Guid.NewGuid()),
             customerId: CustomerId.Of(orderDto.CustomerId),
+            merchantId: orderDto.MerchantId,
             transactionToken: orderDto.TransactionToken,
             orderName: OrderName.Of(orderDto.OrderName),
             shippingAddress: shippingAddress,

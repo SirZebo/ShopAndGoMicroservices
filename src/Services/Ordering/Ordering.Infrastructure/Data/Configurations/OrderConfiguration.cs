@@ -15,6 +15,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             dbId => OrderId.Of(dbId)
         );
         builder.Property(o => o.TransactionToken);
+        builder.Property(o => o.MerchantId);
 
         builder.Property(o => o.MaxCompletionTime).HasConversion(
             maxCompletionTime => maxCompletionTime.TotalDays,
