@@ -1,182 +1,98 @@
 <template>
   <div class="checkout">
-    <h1>Checkout</h1>
-    <div v-if="cart.length === 0">
-      <p>Your cart is empty. 😞</p>
-      <router-link to="/products" class="shop-btn">Browse Products</router-link>
-    </div>
-
-    <div v-else>
-      <div class="cart-list">
-        <div class="cart-item" v-for="(item, index) in cart" :key="index">
-          <img :src="item.image" :alt="item.name" class="cart-image" />
-          <div class="cart-details">
-            <h2>{{ item.name }}</h2>
-            <p>{{ item.description }}</p>
-            <span class="price">${{ item.price.toFixed(2) }}</span>
-          </div>
-        </div>
+    <h1>Cart Summary</h1>
+    <div class="cart-summary">
+      <div class="cart-item" v-for="item in cartItems" :key="item.id">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.quantity }} x ${{ item.price.toFixed(2) }}</p>
       </div>
-
-      <div class="total">
+      <div class="total-price">
         <h3>Total Price: ${{ totalPrice.toFixed(2) }}</h3>
       </div>
-
-      <form @submit.prevent="submitOrder">
-        <h3>Billing & Shipping Information</h3>
-
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            v-model="form.fullName"
-            required
-            placeholder="Enter your full name"
-            :class="{'error': formErrors.fullName}"
-          />
-          <span v-if="formErrors.fullName" class="error-message">{{ formErrors.fullName }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            v-model="form.email"
-            required
-            placeholder="Enter your email"
-            :class="{'error': formErrors.email}"
-          />
-          <span v-if="formErrors.email" class="error-message">{{ formErrors.email }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input
-            type="text"
-            id="phone"
-            v-model="form.phone"
-            required
-            placeholder="Enter your phone number"
-            :class="{'error': formErrors.phone}"
-          />
-          <span v-if="formErrors.phone" class="error-message">{{ formErrors.phone }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="shippingAddress">Shipping Address</label>
-          <input
-            type="text"
-            id="shippingAddress"
-            v-model="form.shippingAddress"
-            required
-            placeholder="Enter your shipping address"
-            :class="{'error': formErrors.shippingAddress}"
-          />
-          <span v-if="formErrors.shippingAddress" class="error-message">{{ formErrors.shippingAddress }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="billingAddress">Billing Address</label>
-          <input
-            type="text"
-            id="billingAddress"
-            v-model="form.billingAddress"
-            required
-            placeholder="Enter your billing address"
-            :class="{'error': formErrors.billingAddress}"
-          />
-          <span v-if="formErrors.billingAddress" class="error-message">{{ formErrors.billingAddress }}</span>
-        </div>
-
-        <button type="submit" class="checkout-btn" :disabled="isFormInvalid">Complete Checkout</button>
-      </form>
     </div>
+
+    <h2>Shipping Information</h2>
+    <form @submit.prevent="submitOrder">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" v-model="shippingInfo.fullName" required />
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" id="address" v-model="shippingInfo.address" required />
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" v-model="shippingInfo.city" required />
+      </div>
+
+      <div class="form-group">
+        <label for="postalCode">Postal Code</label>
+        <input type="text" id="postalCode" v-model="shippingInfo.postalCode" required />
+      </div>
+
+      <h2>Payment Information</h2>
+      <div class="form-group">
+        <label for="creditCard">Credit Card</label>
+        <input type="text" id="creditCard" v-model="paymentInfo.creditCard" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="place-order-button">Place Order</button>
+      </div>
+    </form>
   </div>
 </template>
-  
+
 <script>
-import cartStore from "@/store/cartStore";
+import { cartStore } from '@/store/cartStore';
+import axios from 'axios';
 
 export default {
-  name: "CheckoutView",
+  name: 'CheckoutView',
   data() {
     return {
-      cart: cartStore.getCart(),
-      form: {
-        fullName: "",
-        email: "",
-        phone: "",
-        shippingAddress: "",
-        billingAddress: ""
+      shippingInfo: {
+        fullName: '',
+        address: '',
+        city: '',
+        postalCode: ''
       },
-      formErrors: {
-        fullName: "",
-        email: "",
-        phone: "",
-        shippingAddress: "",
-        billingAddress: ""
+      paymentInfo: {
+        creditCard: ''
       }
     };
   },
   computed: {
-    totalPrice() {
-      return this.cart.reduce((total, item) => total + item.price, 0);
+    cartItems() {
+      return cartStore.getCart(); // Get the cart items
     },
-    isFormInvalid() {
-      // Check if any field has errors or is empty
-      return Object.values(this.formErrors).some(error => error !== "") || Object.values(this.form).some(value => value === "");
+    totalPrice() {
+      return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0); // Calculate the total price
     }
   },
   methods: {
-    validateForm() {
-      this.formErrors = {}; // Reset errors
-      let isValid = true;
+    async submitOrder() {
+      const orderDetails = {
+        items: this.cartItems,
+        shippingInfo: this.shippingInfo,
+        paymentInfo: this.paymentInfo
+      };
 
-      // Validate Full Name
-      if (!this.form.fullName) {
-        this.formErrors.fullName = "Full name is required.";
-        isValid = false;
-      }
+      try {
+        // Make an API call to create an order and get the checkout URL
+        const response = await axios.post('https://your-backend-api.com/createOrder', orderDetails);
 
-      // Validate Email
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      if (!this.form.email || !emailPattern.test(this.form.email)) {
-        this.formErrors.email = "Valid email is required.";
-        isValid = false;
-      }
-
-      // Validate Phone Number (just digits for now)
-      const phonePattern = /^[0-9]+$/;
-      if (!this.form.phone || !phonePattern.test(this.form.phone)) {
-        this.formErrors.phone = "Phone number should contain only digits.";
-        isValid = false;
-      }
-
-      // Validate Shipping Address
-      if (!this.form.shippingAddress) {
-        this.formErrors.shippingAddress = "Shipping address is required.";
-        isValid = false;
-      }
-
-      // Validate Billing Address
-      if (!this.form.billingAddress) {
-        this.formErrors.billingAddress = "Billing address is required.";
-        isValid = false;
-      }
-
-      return isValid;
-    },
-
-    submitOrder() {
-      if (this.validateForm()) {
-        console.log("Order Submitted", this.form);
-        // You can now submit this form data to the backend for processing
-        alert("Order submitted!");
-        this.$router.push("/order-confirmation");
-      } else {
-        console.log("Form validation failed");
+        // Check if the checkout URL exists in the response
+        if (response.data.checkout_url) {
+          // Redirect user to the payment link (checkout URL)
+          window.location.href = response.data.checkout_url;
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert('There was an error processing your order. Please try again.');
       }
     }
   }
@@ -185,116 +101,71 @@ export default {
 
 <style scoped>
 .checkout {
-  text-align: center;
-  padding: 40px;
+  margin-top: 100px;  /* Adjusted to ensure space between navbar and content */
+  padding: 0 20px; /* Added padding for mobile responsiveness */
+  margin-bottom: 50px; /* Added margin to match the home page's bottom spacing */
+  font-family: Arial, sans-serif;
 }
 
-.cart-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
+h1 {
+  color: #363d46;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h2 {
+  color: #363d46;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.cart-summary {
+  margin-bottom: 30px;
 }
 
 .cart-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background: #fff;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
+  margin-bottom: 10px;
 }
 
-.cart-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 5px;
-  object-fit: cover;
-  margin-right: 15px;
-}
-
-.cart-details {
-  flex-grow: 1;
-}
-
-.price {
-  font-weight: bold;
-  color: #007bff;
-}
-
-.total {
+.total-price {
   margin-top: 20px;
-  font-size: 18px;
   font-weight: bold;
-}
-
-.checkout-btn {
-  background-color: #28a745;
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-  width: 100%;
-  font-size: 18px;
-}
-
-.checkout-btn:hover {
-  background-color: #218838;
 }
 
 .form-group {
-  text-align: left;
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 15px;
 }
 
 .form-group label {
-  font-weight: bold;
-  font-size: 16px;
+  display: block;
+  font-size: 1rem;
+  color: #363d46;
 }
 
 .form-group input {
-  padding: 12px;
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 16px;
-  margin-top: 5px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.error {
-  border-color: red;
-}
-
-.error-message {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.shop-btn {
-  display: inline-block;
+.form-actions {
   margin-top: 20px;
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
+  text-align: left; /* Align the button to the left */
 }
 
-.shop-btn:hover {
-  background-color: #0056b3;
+.place-order-button {
+  padding: 12px 20px;
+  background-color: #363d46;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.place-order-button:hover {
+  background-color: #2a333d;
 }
 </style>

@@ -5,26 +5,20 @@ import ProductDetailsView from '../views/ProductDetailsView.vue'
 import CartView from '../views/CartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
 import OrderConfirmationView from '../views/OrderConfirmationView.vue';
+import OrderTrackingView from '../views/OrderTrackingView.vue'; 
+import OrderCancellationView from '../views/OrderCancellationView.vue'; 
+import ReviewView from '../views/ReviewView.vue'; 
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
+  {path: '/', name: 'home', component: HomeView},
   { path: '/products', name: 'ProductsView', component: ProductsView },
   { path: '/products/:id', name: 'ProductDetailsView', component: ProductDetailsView, props: true },
   { path: '/cart', name: 'CartView', component: CartView },
   { path: '/checkout', name: 'CheckoutView', component: CheckoutView },
   { path: '/order-confirmation', name: 'OrderConfirmationView', component: OrderConfirmationView },
+  { path: '/order-tracking', name: 'OrderTrackingView', component: OrderTrackingView },
+  { path: '/order-cancellation', name: 'OrderCancellationView', component: OrderCancellationView },
+  { path: '/review', name: 'ReviewView', component: ReviewView },
 ]
 
 const router = createRouter({
