@@ -8,7 +8,8 @@
         "basket.api": "StartDebugging",
         "discount.grpc": "StartDebugging",
         "finance.api": "StartDebugging",
-        "jobscheduler.api": "StartDebugging"
+        "jobscheduler.api": "StartDebugging",
+        "feedback.api": "StartDebugging"
       }
     }
   }
