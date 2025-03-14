@@ -21,29 +21,29 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     }
 
 }
-internal class CreateProductCommandHandler
-    (IDocumentSession session)
-    : ICommandHandler<CreateProductCommand, CreateProductResult>
-{
-    // Business logic to create a product
-    public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
-    {
-        var product = new Product
-        {
-            Name = command.Name,
-            Category = command.Category,
-            Description = command.Description,
-            ImageFile = command.ImageFile,
-            Price = command.Price,
-            MaxCompletionTime = command.MaxCompletionTime,
-            Language = command.Language,
-        };
+//internal class CreateProductCommandHandler
+//    (IDocumentSession session)
+//    : ICommandHandler<CreateProductCommand, CreateProductResult>
+//{
+//    // Business logic to create a product
+//    public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+//    {
+//        var product = new Product
+//        {
+//            Name = command.Name,
+//            Category = command.Category,
+//            Description = command.Description,
+//            ImageFile = command.ImageFile,
+//            Price = command.Price,
+//            MaxCompletionTime = command.MaxCompletionTime,
+//            Language = command.Language,
+//        };
 
-        // save to database
-        session.Store(product);
-        await session.SaveChangesAsync(cancellationToken);
+//        // save to database
+//        session.Store(product);
+//        await session.SaveChangesAsync(cancellationToken);
 
-        // return result
-        return new CreateProductResult(product.Id);
-    }
-}
+//        // return result
+//        return new CreateProductResult(product.Id);
+//    }
+//}

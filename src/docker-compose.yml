@@ -61,11 +61,11 @@ services:
       context: .
       dockerfile: Services/JobScheduler/JobScheduler.API/Dockerfile
 
-  feedback.api:
-    image: ${DOCKER_REGISTRY-}feedbackapi
-    build:
-      context: .
-      dockerfile: Services/Feedback/Feedback.API/Dockerfile
+  # feedback.api:
+  #   image: ${DOCKER_REGISTRY-}feedbackapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Feedback/Feedback.API/Dockerfile
 
 volumes:
   postgres_catalog:
