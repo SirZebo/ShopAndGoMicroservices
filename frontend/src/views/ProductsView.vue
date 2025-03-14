@@ -1,9 +1,9 @@
 <template>
   <div class="products">
     <div class="product-list">
-      <!-- Loop through the static product data -->
+      <!-- Loop through the product data -->
       <div v-for="product in products" :key="product.id" class="product-item">
-        <img :src="`/assets/${product.imageFile}`" alt="product.name" class="product-image" />
+        <img :src="`/assets/${product.imageFile}`" :alt="product.name" class="product-image" />
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
@@ -18,78 +18,34 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'ProductsView',
   data() {
     return {
-      // Static product data
-      products: [
-        {
-          id: '5334c996-8457-4cf0-815c-ed2b77c4ff61',
-          name: 'IPhone X',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-1.png',
-          price: 950.00,
-          category: ['Smart Phone']
-        },
-        {
-          id: 'c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914',
-          name: 'Samsung 10',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-2.png',
-          price: 840.00,
-          category: ['Smart Phone']
-        },
-        {
-          id: '4f136e9f-ff8c-4c1f-9a33-d12f689bdab8',
-          name: 'Huawei Plus',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-3.png',
-          price: 650.00,
-          category: ['White Appliances']
-        },
-        {
-          id: '6ec1297b-ec0a-4aa1-be25-6726e3b51a27',
-          name: 'Xiaomi Mi 9',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-4.png',
-          price: 470.00,
-          category: ['White Appliances']
-        },
-        {
-          id: 'b786103d-c621-4f5a-b498-23452610f88c',
-          name: 'HTC U11+ Plus',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-5.png',
-          price: 380.00,
-          category: ['Smart Phone']
-        },
-        {
-          id: 'c4bbc4a2-4555-45d8-97cc-2a99b2167bff',
-          name: 'LG G7 ThinQ',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-6.png',
-          price: 240.00,
-          category: ['Home Kitchen']
-        },
-        {
-          id: '93170c85-7795-489c-8e8f-7dcf3b4f4188',
-          name: 'Panasonic Lumix',
-          description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-          imageFile: 'product-6.png',
-          price: 240.00,
-          category: ['Camera']
-        }
-      ]
+      products: [] // Initialize as an empty array
     };
   },
+  created() {
+    this.fetchProducts();
+  },
   methods: {
+    async fetchProducts() {
+      try {
+        const response = await axios.get('https://localhost:6060/products?pageNumber=1&pageSize=10');
+        console.log('Fetched products:', response.data); // Debugging log
+        this.products = response.data.products || []; // Ensure it's an array
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    },
     viewProduct(id) {
-      // Navigate to the Product Details page
       this.$router.push({ name: 'ProductDetailsView', params: { id } });
     }
   }
 };
+
 </script>
 
 <style scoped>

@@ -1,34 +1,43 @@
 <template>
-  <div class="product-details">
+  <div v-if="product" class="product-details">
     <h2>{{ product.name }}</h2>
     <p>{{ product.description }}</p>
-    <p class="price">${{ product.price }}</p>
-    <p>Category: {{ product.category.join(', ') }}</p>
-    <button @click="addToCart(product)">Add to Cart</button>
+    <p class="price">${{ product.price ? product.price.toFixed(2) : '0.00' }}</p>
+    <p>Category: {{ product.category?.join(', ') }}</p>
+    <button @click="addToCart">Add to Cart</button>
   </div>
+  <p v-else>Loading product details...</p>
 </template>
 
 <script>
+import axios from 'axios';
 import { cartStore } from '@/store/cartStore'; // Import the cart store
 
 export default {
   name: 'ProductDetailsView',
   data() {
     return {
-      product: {
-        id: '4f136e9f-ff8c-4c1f-9a33-d12f689bdab8',
-        name: 'Huawei Plus',
-        description: 'This phone is the company\'s biggest change to its flagship smartphone in years. It includes a borderless.',
-        price: 650.00,
-        category: ['White Appliances'],
-        imageFile: 'product-3.png',
-      }
+      product: null, // Initialize as null
     };
   },
+  created() {
+    this.fetchProduct();
+  },
   methods: {
-    addToCart(product) {
-      cartStore.addToCart(product);  // Add product to cart
-      console.log("Cart after adding:", cartStore.getCart());
+    async fetchProduct() {
+      const productId = this.$route.params.id;
+      try {
+        const response = await axios.get(`https://localhost:6060/products/${productId}`);
+        this.product = response.data.product || {};
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    },
+    addToCart() {
+      if (this.product) {
+        cartStore.addToCart(this.product);
+        console.log("Cart after adding:", cartStore.getCart());
+      }
     }
   }
 };
@@ -36,10 +45,10 @@ export default {
 
 <style scoped>
 .product-details {
-  margin-top: 100px;  /* Adjusted to ensure space between navbar and content */
+  margin-top: 100px;
   text-align: center;
-  padding: 0 20px; /* Added padding for mobile responsiveness */
-  margin-bottom: 50px; /* Added margin to match the home page's bottom spacing */
+  padding: 0 20px;
+  margin-bottom: 50px;
 }
 
 .price {
