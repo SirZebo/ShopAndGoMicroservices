@@ -60,5 +60,6 @@ app.UseHealthChecks("/health",
     {
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
+app.UseCors("AllowAllOrigins");
 
 app.Run();

@@ -38,6 +38,7 @@ public static class DependencyInjection
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
+        app.UseCors("AllowAllOrigins");
 
 
         return app;
