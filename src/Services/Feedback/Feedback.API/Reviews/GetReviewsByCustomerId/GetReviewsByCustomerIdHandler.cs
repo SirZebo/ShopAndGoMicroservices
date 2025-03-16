@@ -1,4 +1,5 @@
-﻿using Feedback.API.Model;
+﻿using Feedback.API.Exceptions;
+using Feedback.API.Model;
 
 namespace Feedback.API.Reviews.GetReviewsByCustomerId;
 
@@ -20,7 +21,7 @@ internal class GetReviewsByCustomerIdQueryHandler
 
         if (reviews.IsEmpty())
         {
-            //throw new ProductNotFoundException(query.Id);
+            throw new CustomerNotFoundException(query.CustomerId);
         }
 
         return new GetReviewsByCustomerIdResult(reviews);
