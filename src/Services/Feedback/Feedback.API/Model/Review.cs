@@ -7,5 +7,6 @@ public class Review
     public Guid Id { get; set; }
     public Order Order { get; set; }
     public FeedbackStatus FeedbackStatus { get; set; }
+    public DisputeStatus? DisputeStatus { get; set; }
     public string Body { get; set; } = default!;
 }

@@ -44,6 +44,10 @@ internal class UpdateReviewCommandHandler
 
         review.FeedbackStatus = command.FeedbackStatus;
         review.Body = command.Body;
+        if (review.FeedbackStatus == FeedbackStatus.Complaint)
+        {
+            review.DisputeStatus = DisputeStatus.UnderReview;
+        }
 
         session.Update(review);
         await session.SaveChangesAsync(cancellationToken);

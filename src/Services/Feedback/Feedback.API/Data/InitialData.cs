@@ -43,6 +43,7 @@ public class InitialData : IInitialData
                     Id = new Guid("2d517904-c141-47cf-9ba2-6eb5f015570f"),
                     Order = order1,
                     FeedbackStatus = Enums.FeedbackStatus.Incomplete,
+                    DisputeStatus = Enums.DisputeStatus.NoDispute,
                     Body = ""
                 },
             };
