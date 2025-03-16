@@ -13,6 +13,18 @@ services:
     volumes:
       - postgres_catalog:/var/lib/postgresql/data/
 
+  feedbackdb:
+    container_name: feedbackdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=FeedbackDb
+    restart: always
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_feedback:/var/lib/postgresql/data/
+
   # trackingdb:
   #   container_name: trackingdb
   #   environment:
@@ -219,14 +231,23 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
-  # feedback.api:
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_HTTP_PORTS=8080
-  #     - ASPNETCORE_HTTPS_PORTS=8081
-  #   ports:
-  #     - "8080"
-  #     - "8081"
-  #   volumes:
-  #     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  feedback.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=feedbackdb;Port=5432;Database=FeedbackDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      # - ConnectionStrings__Redis=distributedcache:6379
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+    depends_on:
+      - feedbackdb
+      - distributedcache 
+      - messagebroker
+    ports:
+      - "6005:8080"
+      - "6065:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
