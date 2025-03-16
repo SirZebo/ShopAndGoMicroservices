@@ -15,12 +15,12 @@ public class GetReviewByIdEndpoint : ICarterModule
         {
             var result = await sender.Send(new GetReviewByIdQuery(id));
 
-            var response = result.Adapt<GetReviewByIdEndpoint>();
+            var response = result.Adapt<GetReviewByIdResponse>();
 
             return Results.Ok(response);
         })
         .WithName("GetReviewById")
-        .Produces<GetReviewByIdEndpoint>(StatusCodes.Status200OK)
+        .Produces<GetReviewByIdResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Get Review By Id")
         .WithDescription("Get Review By Id");
