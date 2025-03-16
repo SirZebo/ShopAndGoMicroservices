@@ -10,8 +10,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_catalog:/var/lib/postgresql/data/
+    # volumes:
+    #   - postgres_catalog:/var/lib/postgresql/data/
 
   feedbackdb:
     container_name: feedbackdb
@@ -22,8 +22,8 @@ services:
     restart: always
     ports:
       - "5435:5432"
-    volumes:
-      - postgres_feedback:/var/lib/postgresql/data/
+    # volumes:
+    #   - postgres_feedback:/var/lib/postgresql/data/
 
   # trackingdb:
   #   container_name: trackingdb
@@ -46,8 +46,8 @@ services:
     restart: always
     ports:
       - "5433:5432"
-    volumes:
-      - postgres_finance:/var/lib/postgresql/data/
+    # volumes:
+    #   - postgres_finance:/var/lib/postgresql/data/
   
   jobschedulerdb:
     container_name: jobschedulerdb
