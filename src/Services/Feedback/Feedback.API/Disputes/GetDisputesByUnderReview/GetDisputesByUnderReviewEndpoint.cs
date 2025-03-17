@@ -1,6 +1,6 @@
 ﻿using Feedback.API.Model;
 
-namespace Feedback.API.Reviews.GetDisputes;
+namespace Feedback.API.Disputes.GetDisputesByUnderReview;
 
 public record GetDisputesByUnderReviewRequest(int? PageNumber = 1, int? PageSize = 10);
 public record GetDisputesByUnderReviewResponse(IEnumerable<Review> Reviews);

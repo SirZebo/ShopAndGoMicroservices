@@ -1,7 +1,7 @@
 ﻿using Feedback.API.Model;
 using Marten.Pagination;
 
-namespace Feedback.API.Reviews.GetDisputes;
+namespace Feedback.API.Disputes.GetDisputesByUnderReview;
 
 public class GetDisputesByUnderReviewHandler
 {
