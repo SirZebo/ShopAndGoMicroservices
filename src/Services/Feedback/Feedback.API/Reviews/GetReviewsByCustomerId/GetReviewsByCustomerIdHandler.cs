@@ -3,7 +3,7 @@ using Feedback.API.Model;
 
 namespace Feedback.API.Reviews.GetReviewsByCustomerId;
 
-public record GetReviewsByCustomerIdQuery(Guid CustomerId) : IQuery<GetReviewsByCustomerIdResult>;
+public record GetReviewsByCustomerIdQuery(Guid CustomerId, int? PageNumber = 1, int? PageSize = 10) : IQuery<GetReviewsByCustomerIdResult>;
 
 public record GetReviewsByCustomerIdResult(IEnumerable<Review> Reviews);
 public class GetReviewsByCustomerIdHandler
