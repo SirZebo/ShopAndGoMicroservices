@@ -1,3 +1,7 @@
+
+# Create a new virtual environment (they can name it venv)
+python -m venv venv
+
 activate venv 
 source venv/bin/activate
 
