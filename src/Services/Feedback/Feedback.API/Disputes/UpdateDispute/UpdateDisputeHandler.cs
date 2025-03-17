@@ -1,6 +1,9 @@
-﻿using Feedback.API.Enums;
+﻿using BuildingBlocks.Messaging.Events;
+using BuildingBlocks.Messaging.Events.Disputes;
+using Feedback.API.Enums;
 using Feedback.API.Exceptions;
 using Feedback.API.Model;
+using MassTransit;
 
 namespace Feedback.API.Disputes.UpdateDispute;
 
@@ -23,7 +26,8 @@ public class UpdateDisputeValidator : AbstractValidator<UpdateDisputeCommand>
 }
 
 internal class UpdateDisputeCommandHandler
-    (IDocumentSession session)
+    (IDocumentSession session,
+    IPublishEndpoint publishEndpoint)
     : ICommandHandler<UpdateDisputeCommand, UpdateDisputeResult>
 {
     public async Task<UpdateDisputeResult> Handle(UpdateDisputeCommand command, CancellationToken cancellationToken)
@@ -39,6 +43,17 @@ internal class UpdateDisputeCommandHandler
 
         session.Update(review);
         await session.SaveChangesAsync(cancellationToken);
+
+        if (review.DisputeStatus == DisputeStatus.Accepted)
+        {
+            var eventMessage = new DisputeAcceptedEvent { OrderId = review.Order.Id };
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
+        }
+        if (review.DisputeStatus == DisputeStatus.Rejected)
+        {
+            var eventMessage = new DisputeRejectedEvent { OrderId = review.Order.Id };
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
+        }
 
         return new UpdateDisputeResult(true);
     }

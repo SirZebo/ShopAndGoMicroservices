@@ -3,9 +3,6 @@ version: '3.4'
 services:
   catalogdb:
     image: postgres
-
-  # basketdb:
-  #   image: postgres
   
   distributedcache:
     image: redis
@@ -21,7 +18,6 @@ services:
 
   jobschedulerdb:
     image: mcr.microsoft.com/mssql/server
-
   
   feedbackdb:
     image: postgres
@@ -34,18 +30,6 @@ services:
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
-
-  # basket.api:
-  #   image: ${DOCKER_REGISTRY-}basketapi
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Basket/Basket.API/Dockerfile
-
-  # discount.grpc:
-  #   image: ${DOCKER_REGISTRY-}discountgrpc
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Discount/Discount.Grpc/Dockerfile
 
   ordering.api:
     image: ${DOCKER_REGISTRY-}orderingapi
@@ -75,8 +59,7 @@ volumes:
   postgres_catalog:
   postgres_finance:
   postgres_tracking:
-  postgres_feedback:
-  # postgres_basket:  
+  postgres_feedback:  
 
 
 

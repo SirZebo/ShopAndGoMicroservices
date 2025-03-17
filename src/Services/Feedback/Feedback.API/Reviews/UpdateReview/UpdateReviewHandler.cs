@@ -1,6 +1,9 @@
-﻿using Feedback.API.Enums;
+﻿using BuildingBlocks.Messaging.Events.Review;
+using Feedback.API.Enums;
 using Feedback.API.Exceptions;
 using Feedback.API.Model;
+using MassTransit;
+
 
 namespace Feedback.API.Reviews.UpdateReview;
 
@@ -25,7 +28,8 @@ public class UpdateReviewValidator : AbstractValidator<UpdateReviewCommand>
 }
 
 internal class UpdateReviewCommandHandler
-    (IDocumentSession session)
+    (IDocumentSession session,
+    IPublishEndpoint publishEndpoint)
     : ICommandHandler<UpdateReviewCommand, UpdateReviewResult>
 {
     public async Task<UpdateReviewResult> Handle(UpdateReviewCommand command, CancellationToken cancellationToken)
@@ -48,6 +52,11 @@ internal class UpdateReviewCommandHandler
         if (review.FeedbackStatus == FeedbackStatus.Complaint)
         {
             review.DisputeStatus = DisputeStatus.UnderReview;
+        }
+        if (review.FeedbackStatus == FeedbackStatus.Satisfied)
+        {
+            var eventMessage = new ReviewSatisfiedEvent { OrderId = review.Order.Id };
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
         }
 
         session.Update(review);

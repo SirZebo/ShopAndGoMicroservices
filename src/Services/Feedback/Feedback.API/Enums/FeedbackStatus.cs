@@ -4,5 +4,5 @@ public enum FeedbackStatus
 {
     Incomplete = 1,
     Complaint = 2,
-    Completed = 3,
+    Satisfied = 3,
 }
