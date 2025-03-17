@@ -36,16 +36,24 @@ public class UpdateOrderStatusHandler
         switch(order.Status)
         {
             case OrderStatus.InProgress:
-                IntegrationEvent eventMessage = MapToOrderUpdatedToInProgressEvent(order);
-                await publishEndpoint.Publish(eventMessage);
+                var orderUpdatedToInProgressEvent = MapToOrderUpdatedToInProgressEvent(order);
+                await publishEndpoint.Publish(orderUpdatedToInProgressEvent);
                 break;
             case OrderStatus.Completed:
-                eventMessage = new OrderCompletedEvent { OrderId = order.Id.Value };
-                await publishEndpoint.Publish(eventMessage);
+                var orderCompletedEvent = new OrderCompletedEvent
+                {
+                    OrderId = order.Id.Value,
+                    TotalPrice = order.TotalPrice,
+                };
+                await publishEndpoint.Publish(orderCompletedEvent);
                 break;
             case OrderStatus.Cancelled:
-                eventMessage = new OrderCancelledEvent { OrderId = order.Id.Value };
-                await publishEndpoint.Publish(eventMessage);
+                var orderCancelledEvent = new OrderCancelledEvent 
+                {
+                    OrderId = order.Id.Value,
+                    TotalPrice = order.TotalPrice,
+                };
+                await publishEndpoint.Publish(orderCancelledEvent);
                 break;
             default:
                 throw new OrderStatusNotFoundException(command.Order.Id);

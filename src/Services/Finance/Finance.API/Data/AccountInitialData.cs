@@ -11,6 +11,7 @@ public class AccountInitialData : IInitialData
             return;
 
         session.Store<Account>(GetPreconfiguredAccounts());
+        session.Store<Payment>(GetPreconfiguredPayments());
 
         await session.SaveChangesAsync();
     }
@@ -42,5 +43,19 @@ public class AccountInitialData : IInitialData
                     Balance = 0
                 },
 
+            };
+
+    private static IEnumerable<Payment> GetPreconfiguredPayments() => new List<Payment>()
+            {
+                new Payment()
+                {
+                    Id = new Guid("14534836-bdbe-4dbe-af1c-80f9d5f433c2"),
+                    CustomerId = new Guid("58c49479-ec65-4de2-86e7-033c546291aa"),
+                    MerchantId = new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                    OrderId = new Guid("14534836-bdbe-4dbe-af1c-80f9d5f433c2"),
+                    TransactionToken = Guid.NewGuid(),
+                    OutstandingAmount = 0,
+                    TotalPrice = 950
+                },
             };
 }
