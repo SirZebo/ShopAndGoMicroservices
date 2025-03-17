@@ -44,6 +44,7 @@ internal class UpdateReviewCommandHandler
 
         review.FeedbackStatus = command.FeedbackStatus;
         review.Body = command.Body;
+        review.LastModified = DateTime.UtcNow;
         if (review.FeedbackStatus == FeedbackStatus.Complaint)
         {
             review.DisputeStatus = DisputeStatus.UnderReview;

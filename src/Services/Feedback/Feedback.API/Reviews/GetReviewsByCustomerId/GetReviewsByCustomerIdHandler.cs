@@ -17,6 +17,7 @@ internal class GetReviewsByCustomerIdQueryHandler
     {
         var reviews = await session.Query<Review>()
                 .Where(x => x.Order.CustomerId == query.CustomerId)
+                .OrderByDescending(x => x.LastModified)
                 .ToListAsync();
 
         if (reviews.IsEmpty())

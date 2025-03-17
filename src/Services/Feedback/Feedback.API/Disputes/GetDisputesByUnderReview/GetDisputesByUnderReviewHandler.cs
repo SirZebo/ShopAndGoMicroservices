@@ -19,6 +19,7 @@ internal class GetDisputesByUnderReviewQueryHandler
     {
         var reviews = await session.Query<Review>()
             .Where(x => x.DisputeStatus == Enums.DisputeStatus.UnderReview)
+            .OrderByDescending(x => x.LastModified)
             .ToPagedListAsync(query.PageNumber ?? 1, query.PageSize ?? 10, cancellationToken);
 
         return new GetDisputesByUnderReviewResult(reviews);

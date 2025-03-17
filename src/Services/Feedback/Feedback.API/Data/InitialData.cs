@@ -44,7 +44,9 @@ public class InitialData : IInitialData
                     Order = order1,
                     FeedbackStatus = Enums.FeedbackStatus.Incomplete,
                     DisputeStatus = Enums.DisputeStatus.NoDispute,
-                    Body = ""
+                    Body = "",
+                    CreatedAt = DateTime.UtcNow,
+                    LastModified = DateTime.UtcNow,
                 },
             };
 }

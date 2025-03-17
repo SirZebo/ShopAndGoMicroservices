@@ -9,4 +9,6 @@ public class Review
     public FeedbackStatus FeedbackStatus { get; set; }
     public DisputeStatus? DisputeStatus { get; set; }
     public string Body { get; set; } = default!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime LastModified { get; set; } = DateTime.UtcNow;
 }
