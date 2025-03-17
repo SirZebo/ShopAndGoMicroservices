@@ -48,7 +48,6 @@
 
 <script>
 import { cartStore } from '@/store/cartStore';
-import axios from 'axios';
 
 export default {
   name: 'CheckoutView',
@@ -74,26 +73,9 @@ export default {
     }
   },
   methods: {
-    async submitOrder() {
-      const orderDetails = {
-        items: this.cartItems,
-        shippingInfo: this.shippingInfo,
-        paymentInfo: this.paymentInfo
-      };
-
-      try {
-        // Make an API call to create an order and get the checkout URL
-        const response = await axios.post('https://your-backend-api.com/createOrder', orderDetails);
-
-        // Check if the checkout URL exists in the response
-        if (response.data.checkout_url) {
-          // Redirect user to the payment link (checkout URL)
-          window.location.href = response.data.checkout_url;
-        }
-      } catch (error) {
-        console.error('Error placing order:', error);
-        alert('There was an error processing your order. Please try again.');
-      }
+    submitOrder() {
+      // Redirect the user to the order status page after placing the order
+      this.$router.push('/order-status');
     }
   }
 };

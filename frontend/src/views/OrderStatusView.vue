@@ -23,6 +23,8 @@
 </template>
   
 <script>
+import axios from 'axios';
+
   export default {
     name: 'OrderStatus',
     data() {
@@ -37,12 +39,47 @@
       };
     },
     methods: {
-      payOrder() {
-        // Simulate payment success or failure
-        const success = Math.random() > 0.5; // Simulate random success or failure
-        this.order.status = success ? "Success" : "Failed";
-      }
+    async payOrder() {
+        try {
+            console.log("Pay button clicked! Sending request...");
+
+            const orderDetails = {
+                CheckoutProductDto: {
+                    userName: "swn",
+                    CustomerId: "db7a48da-79b0-4a29-ba03-00deb540baec",
+                    ProductId: "5334c996-8457-4cf0-815c-ed2b77c4ff61",
+                    Price: 950.00,
+                    Quantity: 1,
+                    totalPrice: 950.00,
+                    Lanugage: "Malay",
+                    firstName: "swn",
+                    lastName: "swn",
+                    emailAddress: "test@test.com",
+                    addressLine: "34 Charles Street",
+                    country: "USA",
+                    state: "Michigan",
+                    zipCode: "48198"
+                }
+            };
+
+            const response = await axios.post(
+                "https://localhost:6060/product/checkout",
+                orderDetails,
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            console.log("Response received:", response.data);
+
+            // Extract and display transactionToken
+            const transactionToken = response.data.transactionToken;
+            alert(`Transaction Token: ${transactionToken}`);
+        } catch (error) {
+            console.error("Error processing payment:", error);
+            alert("There was an error processing your payment. Please try again.");
+        }
     }
+}
+
   };
 </script>
   
