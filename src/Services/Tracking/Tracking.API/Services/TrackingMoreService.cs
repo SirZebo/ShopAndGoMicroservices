@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Tracking.API.Dtos;
 using Microsoft.Extensions.Logging;
 
+
 namespace Tracking.API.Services;
 
 public class TrackingMoreService
@@ -66,6 +67,7 @@ public class TrackingMoreService
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
+            
         }
         catch (Exception ex)
         {

@@ -4,7 +4,6 @@ namespace Tracking.API.Dtos;
 
 public class UpdateTrackingDto
 {
-    public string NewStatus { get; set; }
     public string FirstName {get;set;}
     public string LastName {get;set;}
 

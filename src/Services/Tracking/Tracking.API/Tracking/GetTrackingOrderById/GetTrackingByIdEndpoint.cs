@@ -10,7 +10,7 @@ public class GetTrackingByIdEndpoint : ICarterModule
         // ✅ New GET tracking order by ID
         app.MapGet("/tracking/{trackingId:guid}", async (Guid trackingId, ISender sender) =>
         {
-            var query = new GetTrackingByIdQuery(trackingId);
+            var query = new GetTrackingByIdQuery(trackingId.ToString());
             var result = await sender.Send(query);
 
             if (result.OrderStatus == null)
