@@ -1,14 +1,14 @@
-﻿namespace BuildingBlocks.Messaging.Events;
-public record OrderUpdatedToInProgressEvent : IntegrationEvent
+﻿namespace Shipping.API.Model;
+
+public class Order
 {
-    public Guid OrderId { get; set; } = default!;
+    public Guid Id { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
     public Guid MerchantId { get; set; } = default!;
     public Guid ProductId { get; set; } = default!;
     public int Quantity { get; set; } = default!;
-    public TimeSpan MaxCompletionTime { get; set; }
-    public int OrderStatus { get; set; } = default!;
-    public string Language { get; set; } = default!;
+    public DateTime ShipmentDeadline { get; set; }
+    public string Language { get; set; }
 
     // ShippingAddress
     public string FirstName { get; set; } = default!;
@@ -18,6 +18,4 @@ public record OrderUpdatedToInProgressEvent : IntegrationEvent
     public string Country { get; set; } = default!;
     public string State { get; set; } = default!;
     public string ZipCode { get; set; } = default!;
-    
 }
-
