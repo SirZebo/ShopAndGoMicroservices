@@ -2,7 +2,7 @@
   <nav>
     <!-- Shop & Go Logo on the left -->
     <div class="logo">
-      <img src="@/assets/Logo.png" alt="Shop & Go Logo" class="logo-img" />
+      <img src="@/assets/logo.png" alt="Shop & Go Logo" class="logo-img" />
     </div>
 
     <!-- Navigation links on the right -->
