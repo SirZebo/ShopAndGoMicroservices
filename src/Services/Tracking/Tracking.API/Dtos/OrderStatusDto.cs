@@ -9,7 +9,12 @@ public class OrderStatusDto
     public string Courier {get;set;}
     public DateTime CreatedAt{get;set;}
     public string NewStatus { get; set; } = "Pending"; // Default initialization 
-    public string CustomerName {get;set;}
-
     public DateTime UpdateTime { get; set; } = DateTime.UtcNow;  // The timestamp when the update occurred
+
+
+    // ShippingAddress
+    public string CustomerName {get;set;}
+    public string EmailAddress { get; set; } 
+    public string AddressLine { get; set; } 
+    public string ZipCode { get; set; }
 }

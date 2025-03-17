@@ -19,7 +19,7 @@ public class TrackingMoreService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _httpClient.DefaultRequestHeaders.Add("Tracking-Api-Key", Environment.GetEnvironmentVariable("TRACKINGMORE_API_KEY") ?? "unaeyavb-2buj-rxa6-w3rx-s9pahrz67hyq");
+        _httpClient.DefaultRequestHeaders.Add("Tracking-Api-Key", Environment.GetEnvironmentVariable("TRACKINGMORE_API_KEY") ?? "kk6fbzw5-2fra-ogto-tim4-ooaxf66npfy8");
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
@@ -36,7 +36,8 @@ public class TrackingMoreService
                 courier_code = orderStatusDto.Courier,  
                 order_number = orderStatusDto.OrderId.ToString(),  
                 customer_name = orderStatusDto.CustomerName,
-                delivery_status = orderStatusDto.NewStatus
+                customer_email = orderStatusDto.EmailAddress,
+                recipient_postcode = orderStatusDto.ZipCode
             };
 
             var jsonContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
@@ -105,8 +106,8 @@ public class TrackingMoreService
             // Create the JSON payload with the updated tracking information
             var requestBody = new
             {
-                delivery_status = updateTrackingDto.NewStatus,
-                customer_name = updateTrackingDto.CustomerName
+                customer_name = updateTrackingDto.FirstName  + " " + updateTrackingDto.LastName,
+                customer_sms = updateTrackingDto.CustomerPhoneNumber
                 // Include other fields as necessary
             };
 
