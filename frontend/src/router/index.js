@@ -9,6 +9,7 @@ import OrderStatusView from '../views/OrderStatusView.vue';
 import OrderTrackingView from '../views/OrderTrackingView.vue'; 
 import OrderCancellationView from '../views/OrderCancellationView.vue'; 
 import ReviewView from '../views/ReviewView.vue'; 
+import ReviewListView from '../views/ReviewListView.vue'; 
 
 const routes = [
   { path: '/', name: 'home', component: HomeView},
@@ -21,6 +22,7 @@ const routes = [
   { path: '/order-tracking', name: 'OrderTrackingView', component: OrderTrackingView },
   { path: '/order-cancellation', name: 'OrderCancellationView', component: OrderCancellationView },
   { path: '/review', name: 'ReviewView', component: ReviewView },
+  { path: '/review-list', name: 'ReviewListView', component: ReviewListView },
 ]
 
 const router = createRouter({
