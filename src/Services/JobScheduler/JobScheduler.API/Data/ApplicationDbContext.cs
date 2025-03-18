@@ -9,4 +9,6 @@ public class ApplicationDbContext : DbContext
     {
     }
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<Shipment> Shipments => Set<Shipment>();
 }

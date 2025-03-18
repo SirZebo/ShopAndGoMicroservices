@@ -22,6 +22,7 @@ public class PaymentCreatedEventHandler
 
         var payment = new Payment { Id = context.Message.PaymentId, TokenId = scheduledMessage.TokenId };
         await dbContext.Payments.AddAsync(payment);
+        await dbContext.SaveChangesAsync();
 
         await Task.CompletedTask;
     }

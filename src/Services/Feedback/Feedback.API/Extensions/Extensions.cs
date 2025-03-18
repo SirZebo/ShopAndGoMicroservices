@@ -1,13 +1,12 @@
-﻿using BuildingBlocks.Messaging.Events;
-using JobScheduler.API.Jobs.EventHandler.Integration;
+﻿using Feedback.API.Reviews.EventHandler.Integration;
 using MassTransit;
 using System.Reflection;
 
-namespace JobScheduler.API.Extensions;
+namespace Feedback.API.Extensions;
 
 public static class Extensions
 {
-    private static string instanceId = "JobScheduler";
+    private static string instanceId = "Feedback";
     public static IServiceCollection AddMessageBroker
         (this IServiceCollection services,
         IConfiguration configuration,
@@ -19,24 +18,11 @@ public static class Extensions
             // Set naming convention for endpoints
             config.SetKebabCaseEndpointNameFormatter();
 
-            config.AddPublishMessageScheduler();
-
-            config.AddConsumer<PaymentCreatedEventHandler>()
-                .Endpoint(e => e.InstanceId = instanceId); // Pub-Sub
-
-            config.AddConsumer<ReviewCreatedEventHandler>() // Pub-Sub
-                .Endpoint(e => e.InstanceId = instanceId);
-             
-            config.AddConsumer<ShipmentCreatedEventHandler>() // Pub-Sub
-                .Endpoint(e => e.InstanceId = instanceId);
-
             config.AddConsumer<ShipmentDeliveredEventHandler>() // Pub-Sub
                 .Endpoint(e => e.InstanceId = instanceId);
 
             config.UsingRabbitMq((context, configurator) =>
             {
-                configurator.UsePublishMessageScheduler();
-                configurator.UseHangfireScheduler();
                 configurator.Host(new Uri(configuration["MessageBroker:Host"]!), host =>
                 {
                     host.Username(configuration["MessageBroker:UserName"]);

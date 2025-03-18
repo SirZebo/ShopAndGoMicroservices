@@ -51,6 +51,7 @@ internal class UpdateShipmentCommandHandler
         {
             var eventMessage = new ShipmentDeliveredEvent
             {
+                ShipmentId = shipment.Id,
                 OrderId = shipment.Order.Id,
                 CustomerId = shipment.Order.CustomerId,
                 MerchantId = shipment.Order.MerchantId,

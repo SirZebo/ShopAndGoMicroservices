@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace BuildingBlocks.Messaging.Events.Shipments;
 public record ShipmentDeliveredEvent : IntegrationEvent
 {
+    public Guid ShipmentId { get; set; }
     public Guid OrderId { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
     public Guid MerchantId { get; set; } = default!;

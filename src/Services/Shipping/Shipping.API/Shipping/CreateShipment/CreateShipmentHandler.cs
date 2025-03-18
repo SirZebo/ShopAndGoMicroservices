@@ -1,4 +1,6 @@
-﻿using Shipping.API.Dtos;
+﻿using BuildingBlocks.Messaging.Events.Shipments;
+using MassTransit;
+using Shipping.API.Dtos;
 using Shipping.API.Model;
 
 namespace Shipping.API.Shipping.CreateShipment;
@@ -9,7 +11,8 @@ public record CreateShipmentCommand(ShipmentDto Shipment)
 public record CreateShipmentResult(Guid Id);
 
 internal class CreateShipmentCommandHandler
-    (IDocumentSession session)
+    (IDocumentSession session,
+    IPublishEndpoint publishEndpoint)
     : ICommandHandler<CreateShipmentCommand, CreateShipmentResult>
 {
     public async Task<CreateShipmentResult> Handle(CreateShipmentCommand command, CancellationToken cancellationToken)
@@ -43,6 +46,13 @@ internal class CreateShipmentCommandHandler
         // save to database
         session.Store(shipment);
         await session.SaveChangesAsync(cancellationToken);
+
+        var eventMessage = new ShipmentCreatedEvent
+        {
+            ShipmentId = shipment.Id,
+            OrderDeadline = shipment.Order.OrderDeadline
+        };
+        await publishEndpoint.Publish(eventMessage);
 
         // return result
         return new CreateShipmentResult(shipment.Id);
