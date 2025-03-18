@@ -21,7 +21,12 @@ public class ShipmentDeliveredEventHandler
     {
         var orderDto = new OrderDto
         {
-
+            Id = message.OrderId,
+            CustomerId = message.CustomerId,
+            MerchantId = message.MerchantId,
+            ProductId = message.ProductId,
+            Quantity = message.Quantity,
+            OrderDeadline = message.OrderDeadline,
         };
 
         return new CreateReviewCommand(orderDto);
