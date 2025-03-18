@@ -11,7 +11,7 @@ import OrderCancellationView from '../views/OrderCancellationView.vue';
 import ReviewView from '../views/ReviewView.vue'; 
 import ReviewListView from '../views/ReviewListView.vue'; 
 import AdminView from '../views/AdminView.vue';
-// import ShipmentView from '../views/ShipmentView.vue';
+import ShipmentView from '../views/ShipmentView.vue';
 
 const routes = [
   { path: '/', name: 'home', component: HomeView},
@@ -26,7 +26,7 @@ const routes = [
   { path: '/review', name: 'ReviewView', component: ReviewView },
   { path: '/review-list', name: 'ReviewListView', component: ReviewListView },
   { path: '/admin', name: 'AdminView', component: AdminView },
-  // { path: '/shipment', name: 'ShipmentView', component: ShipmentView },
+  { path: '/shipment', name: 'ShipmentView', component: ShipmentView },
 ]
 
 const router = createRouter({
