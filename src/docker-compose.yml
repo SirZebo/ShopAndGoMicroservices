@@ -1,9 +1,10 @@
 version: '3.4'
 
+#contanarise all services
 services:
   catalogdb:
     image: postgres
-  
+
   distributedcache:
     image: redis
 
@@ -12,7 +13,7 @@ services:
 
   financedb:
     image: postgres
-  
+
   # trackingdb:
   #   image: postgres
 
@@ -21,7 +22,7 @@ services:
 
   jobschedulerdb:
     image: mcr.microsoft.com/mssql/server
-  
+
   feedbackdb:
     image: postgres
 
@@ -29,37 +30,37 @@ services:
     image: rabbitmq:management
 
   catalog.api:
-    image: ${DOCKER_REGISTRY-}catalogapi
+    image: boonyew/csc2102_mini_project:catalogapi
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
   ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
+    image: boonyew/csc2102_mini_project:orderingapi
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
   finance.api:
-    image: ${DOCKER_REGISTRY-}financeapi
+    image: boonyew/csc2102_mini_project:financeapi
     build:
       context: .
       dockerfile: Services/Finance/Finance.API/Dockerfile
 
   jobscheduler.api:
-    image: ${DOCKER_REGISTRY-}jobschedulerapi
+    image: boonyew/csc2102_mini_project:jobschedulerapi
     build:
       context: .
       dockerfile: Services/JobScheduler/JobScheduler.API/Dockerfile
 
   feedback.api:
-    image: ${DOCKER_REGISTRY-}feedbackapi
+    image: boonyew/csc2102_mini_project:feedbackapi
     build:
       context: .
       dockerfile: Services/Feedback/Feedback.API/Dockerfile
 
   shipping.api:
-    image: ${DOCKER_REGISTRY-}shippingapi
+    image: boonyew/csc2102_mini_project:shippingapi
     build:
       context: .
       dockerfile: Services/Shipping/Shipping.API/Dockerfile
@@ -68,11 +69,6 @@ volumes:
   postgres_catalog:
   postgres_finance:
   postgres_tracking:
-  postgres_feedback:  
-
-
-
-
-
+  postgres_feedback:
 
 
