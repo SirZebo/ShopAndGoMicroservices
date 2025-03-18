@@ -40,7 +40,7 @@ public class OrderUpdatedToInProgressEventHandler
             MerchantId = message.MerchantId,
             ProductId = message.ProductId,
             Quantity = message.Quantity,
-            ShipmentDeadline = DateTime.UtcNow.Add(message.MaxCompletionTime),
+            OrderDeadline = DateTime.UtcNow.Add(message.MaxCompletionTime),
             ShippingAddress = shippingAddressDto,
             Language = message.Language
         };

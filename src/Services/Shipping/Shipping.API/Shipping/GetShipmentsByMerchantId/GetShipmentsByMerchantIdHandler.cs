@@ -15,7 +15,7 @@ internal class GetShipmentsByMerchantIdQueryHandler
         var shipments = await session.Query<Shipment>()
                 .Where(x => x.Order.MerchantId == query.MerchantId && 
                     x.ShipmentStatus == Enums.ShipmentStatus.OrderReceived)
-                .OrderBy(x => x.Order.ShipmentDeadline)
+                .OrderBy(x => x.Order.OrderDeadline)
                 .ToListAsync();
 
         if (shipments.IsEmpty())

@@ -1,49 +1,42 @@
-﻿namespace Feedback.API.Reviews.CreateReview;
+﻿using Feedback.API.Dtos;
+using Feedback.API.Enums;
+using Feedback.API.Model;
 
-public record CreateReviewCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price, TimeSpan MaxCompletionTime, string Language)
+namespace Feedback.API.Reviews.CreateReview;
+
+public record CreateReviewCommand(OrderDto Order)
     : ICommand<CreateReviewResult>;
 
 public record CreateReviewResult(Guid Id);
 
-public class CreateReviewHandler
+public class CreateReviewCommandValidator : AbstractValidator<CreateReviewCommand>
 {
-}
-
-public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price, TimeSpan MaxCompletionTime, string Language)
-    : ICommand<CreateProductResult>;
-
-public record CreateProductResult(Guid Id);
-
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
-{
-    public CreateProductCommandValidator()
+    public CreateReviewCommandValidator()
     {
     }
 
 }
-//internal class CreateProductCommandHandler
-//    (IDocumentSession session)
-//    : ICommandHandler<CreateProductCommand, CreateProductResult>
-//{
-//    // Business logic to create a product
-//    public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
-//    {
-//        var product = new Product
-//        {
-//            Name = command.Name,
-//            Category = command.Category,
-//            Description = command.Description,
-//            ImageFile = command.ImageFile,
-//            Price = command.Price,
-//            MaxCompletionTime = command.MaxCompletionTime,
-//            Language = command.Language,
-//        };
 
-//        // save to database
-//        session.Store(product);
-//        await session.SaveChangesAsync(cancellationToken);
+internal class CreateReviewCommandHandler
+    (IDocumentSession session)
+    : ICommandHandler<CreateReviewCommand, CreateReviewResult>
+{
+    // Business logic to create a product
+    public async Task<CreateReviewResult> Handle(CreateReviewCommand command, CancellationToken cancellationToken)
+    {
+        var order = command.Order.Adapt<Order>();
+        var review = new Review
+        {
+            Id = Guid.NewGuid(),
+            Order = order,
+            FeedbackStatus = FeedbackStatus.Incomplete,
+        };
 
-//        // return result
-//        return new CreateProductResult(product.Id);
-//    }
-//}
+        // save to database
+        session.Store(review);
+        await session.SaveChangesAsync(cancellationToken);
+
+        // return result
+        return new CreateReviewResult(review.Id);
+    }
+}

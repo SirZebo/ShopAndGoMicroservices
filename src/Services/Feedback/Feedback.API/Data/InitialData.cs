@@ -26,8 +26,7 @@ public class InitialData : IInitialData
         MerchantId = new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
         ProductId = new Guid("5334c996-8457-4cf0-815c-ed2b77c4ff61"),
         Quantity = 1,
-        MaxCompletionTime = TimeSpan.FromDays(3),
-        OrderStatus = 4,
+        OrderDeadline = DateTime.UtcNow.AddDays(3)
     };
 
     private static IEnumerable<Order> GetPreconfiguredOrder() => new List<Order>()

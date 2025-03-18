@@ -1,5 +1,10 @@
-﻿using BuildingBlocks.Messaging.Events;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
+namespace BuildingBlocks.Messaging.Events.Shipments;
 public record ShipmentDeliveredEvent : IntegrationEvent
 {
     public Guid OrderId { get; set; } = default!;
@@ -7,7 +12,5 @@ public record ShipmentDeliveredEvent : IntegrationEvent
     public Guid MerchantId { get; set; } = default!;
     public Guid ProductId { get; set; } = default!;
     public int Quantity { get; set; } = default!;
-    public TimeSpan MaxCompletionTime { get; set; }
-    public int OrderStatus { get; set; } = default!;
+    public DateTime OrderDeadline { get; set; }
 }
-

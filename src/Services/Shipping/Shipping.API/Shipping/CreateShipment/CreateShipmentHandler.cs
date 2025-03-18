@@ -21,7 +21,7 @@ internal class CreateShipmentCommandHandler
             MerchantId = command.Shipment.Order.MerchantId,
             ProductId = command.Shipment.Order.ProductId,
             Quantity = command.Shipment.Order.Quantity,
-            ShipmentDeadline = command.Shipment.Order.ShipmentDeadline,
+            OrderDeadline = command.Shipment.Order.OrderDeadline,
             Language = command.Shipment.Order.Language,
 
             FirstName = command.Shipment.Order.ShippingAddress.FirstName,

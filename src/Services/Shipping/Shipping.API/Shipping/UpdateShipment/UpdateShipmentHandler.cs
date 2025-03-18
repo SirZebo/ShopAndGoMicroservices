@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Messaging.Events.Review;
+using BuildingBlocks.Messaging.Events.Shipments;
 using MassTransit;
 using Shipping.API.Model;
 
@@ -44,6 +45,20 @@ internal class UpdateShipmentCommandHandler
 
         session.Update(shipment);
         await session.SaveChangesAsync(cancellationToken);
+
+        if (shipment.ShipmentStatus == Enums.ShipmentStatus.Delivered)
+        {
+            var eventMessage = new ShipmentDeliveredEvent
+            {
+                OrderId = shipment.Order.Id,
+                CustomerId = shipment.Order.CustomerId,
+                MerchantId = shipment.Order.MerchantId,
+                ProductId = shipment.Order.ProductId,
+                Quantity = shipment.Order.Quantity,
+                OrderDeadline = shipment.Order.OrderDeadline,
+            };
+            await publishEndpoint.Publish(eventMessage);
+        }
 
         return new UpdateShipmentResult(true);
     }

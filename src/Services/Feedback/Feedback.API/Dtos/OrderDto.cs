@@ -1,6 +1,6 @@
-﻿namespace Feedback.API.Model;
+﻿namespace Feedback.API.Dtos;
 
-public class Order
+public class OrderDto
 {
     public Guid Id { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;

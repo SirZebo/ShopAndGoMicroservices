@@ -37,7 +37,7 @@ public class InitialData : IInitialData
                     MerchantId = new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
                     ProductId = new Guid("3b423421-6dfb-4ec2-a54c-358bc19d30f1"),
                     Quantity = 1,
-                    ShipmentDeadline = DateTime.UtcNow.AddDays(3),
+                    OrderDeadline = DateTime.UtcNow.AddDays(3),
                     Language = "Malay",
                     FirstName = "mehmet", 
                     LastName = "ozkaya", 

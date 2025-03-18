@@ -7,7 +7,7 @@ public class Order
     public Guid MerchantId { get; set; } = default!;
     public Guid ProductId { get; set; } = default!;
     public int Quantity { get; set; } = default!;
-    public DateTime ShipmentDeadline { get; set; }
+    public DateTime OrderDeadline { get; set; }
     public string Language { get; set; }
 
     // ShippingAddress
