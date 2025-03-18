@@ -3,75 +3,108 @@
     <h1>Review Details</h1>
     <h2>Review Status: {{ reviewStatusText }}</h2>
 
-    <!-- Radio buttons for review status -->
-    <div v-if="!reviewSubmitted" class="review-status">
-      <input type="radio" id="uncompleted" value="1" v-model="review.status">
-      <label for="uncompleted">Uncompleted</label>
-      <input type="radio" id="complaint" value="2" v-model="review.status">
-      <label for="complaint">Complaint</label>
-      <input type="radio" id="satisfied" value="3" v-model="review.status">
-      <label for="satisfied">Satisfied</label>
+    <!-- Show review content -->
+    <p><strong>Review Body:</strong> {{ review.body }}</p>
+    <p><strong>Order Item:</strong> {{ getProductName(review.order.productId) }}</p>
+    <p><strong>Order Quantity:</strong> {{ review.order.quantity }}</p>
+
+    <!-- Review Form -->
+    <div v-if="!reviewSubmitted" class="review-form">
+      <textarea v-model="review.body" :disabled="reviewSubmitted" placeholder="Update your review here..." rows="5"></textarea>
+      <button @click="submitReview" :disabled="!isFormValid">Update Review</button>
     </div>
 
-    <!-- Description form -->
-    <div class="review-form">
-      <textarea v-model="review.description" :disabled="reviewSubmitted" placeholder="Please provide details here..." rows="5" required></textarea>
-      <div class="button-group">
-        <button v-if="review.status === '1' && !reviewSubmitted" @click="editReview" class="edit-button">Edit Review</button>
-        <button v-if="!reviewSubmitted" @click="submitReview" class="submit-button">Submit Review</button>
-      </div>
-    </div>
-
-    <!-- Success Message -->
     <div v-if="reviewSubmitted" class="success-message">
-      <p>Your review has been submitted and can no longer be edited.</p>
+      <p>Your review has been updated.</p>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'ReviewView',
   data() {
     return {
       review: {
-        status: '1', // Default to Uncompleted
-        description: '' // User feedback
+        id: '',
+        body: '',
+        order: {
+          productId: '',
+          quantity: 0
+        }
       },
-      reviewSubmitted: false // To track if the review is submitted
+      products: [],
+      reviewSubmitted: false
     };
   },
   computed: {
     reviewStatusText() {
-      switch (this.review.status) {
-        case '1': return 'Uncompleted';
-        case '2': return 'Complaint';
-        case '3': return 'Satisfied';
-        default: return 'Unknown'; // Fallback if status is undefined
-      }
+      return this.review.feedbackStatus === 1 ? "Complaint" : "Satisfied";
+    },
+    isFormValid() {
+      return this.review.body.trim().length > 0;
     }
   },
+  async created() {
+    const reviewId = this.$route.params.id;
+    await this.fetchReview(reviewId);
+    await this.fetchProducts();
+  },
   methods: {
-    editReview() {
-      // Logic to enable editing the review
-      alert("You can now edit your review.");
-    },
-    submitReview() {
-      if (!this.review.description.trim()) {
-        alert("The description is required. Please fill it in before submitting.");
-        return;
+    async fetchReview(reviewId) {
+      try {
+        const response = await axios.get(`https://localhost:6065/reviews/${reviewId}`);
+        this.review = response.data.review;
+      } catch (error) {
+        console.error("Error fetching review:", error);
       }
-      this.reviewSubmitted = true;
-      // Implement API call here to submit the review to the backend
+    },
+    async fetchProducts() {
+      try {
+        const response = await axios.get("https://localhost:6060/products?pageNumber=1&pageSize=10");
+        this.products = response.data.products;
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    },
+    getProductName(productId) {
+      const product = this.products.find(p => p.id === productId);
+      return product ? product.name : "Unknown Product";
+    },
+    async submitReview() {
+      try {
+        const hardcodedReview = {
+          id: "2d517904-c141-47cf-9ba2-6eb5f015570f",
+          feedbackStatus: 2,
+          body: "Bad review"
+        };
+
+        const response = await axios.put(`https://localhost:6065/reviews`, hardcodedReview);
+
+        // Store response message
+        this.reviewResponse = `Success: ${response.detail}`;
+      } catch (error) {
+        // Capture error message
+        this.reviewResponse = `Error: ${error.response?.status || 'Unknown'}`;
+      } finally {
+        // Redirect to review-list no matter what
+        this.$router.push('/review-list');
+      }
     }
+
+
+
+
   }
 };
 </script>
 
 <style scoped>
 .review-page {
-  margin-top: 100px; /* Adjusted to ensure space between navbar and content */
-  padding: 0 20px; /* Added padding for mobile responsiveness */
+  margin-top: 100px;
+  padding: 0 20px;
   font-family: Arial, sans-serif;
 }
 
@@ -84,13 +117,8 @@ h1 {
   margin-bottom: 20px;
 }
 
-.review-status {
-  margin-bottom: 20px;
-}
-
-.review-status label {
-  margin-right: 20px;
-  font-size: 1rem;
+.review-form {
+  margin-top: 20px;
 }
 
 textarea {
@@ -101,31 +129,21 @@ textarea {
   margin-bottom: 20px;
 }
 
-.button-group {
-  display: flex;
-  justify-content: space-between; /* Space between buttons */
-  margin-top: 10px;
-}
-
-.edit-button,
-.submit-button {
-  flex: 1; /* Each button takes equal space */
+button {
   padding: 10px;
   background-color: #363d46;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px; /* Space between buttons */
 }
 
-.edit-button:last-child,
-.submit-button:last-child {
-  margin-right: 0; /* Remove margin for the last button */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.edit-button:hover,
-.submit-button:hover {
+button:hover:not(:disabled) {
   background-color: #2a333d;
 }
 

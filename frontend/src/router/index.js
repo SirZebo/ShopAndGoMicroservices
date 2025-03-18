@@ -23,7 +23,7 @@ const routes = [
   { path: '/order-status', name: 'OrderStatusView', component: OrderStatusView },
   { path: '/order-tracking', name: 'OrderTrackingView', component: OrderTrackingView },
   { path: '/order-cancellation', name: 'OrderCancellationView', component: OrderCancellationView },
-  { path: '/review', name: 'ReviewView', component: ReviewView },
+  { path: '/review/:id', name: 'ReviewView', component: ReviewView, props: true },
   { path: '/review-list', name: 'ReviewListView', component: ReviewListView },
   { path: '/admin', name: 'AdminView', component: AdminView },
   // { path: '/shipment', name: 'ShipmentView', component: ShipmentView },
