@@ -18,11 +18,11 @@ public class GetDisputesByUnderReviewEndpoint : ICarterModule
 
             return Results.Ok(response);
         })
-        .WithName("GetProducts")
+        .WithName("GetDisputesByUnderReview")
         .Produces<GetDisputesByUnderReviewResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithSummary("Get Products")
-        .WithDescription("Get Products");
+        .WithSummary("Get Disputes By Under Review")
+        .WithDescription("Get Disputes By Under Review");
 
     }
 }

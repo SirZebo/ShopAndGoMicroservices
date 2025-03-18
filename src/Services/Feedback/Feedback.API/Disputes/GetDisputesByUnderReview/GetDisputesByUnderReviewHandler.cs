@@ -3,10 +3,6 @@ using Marten.Pagination;
 
 namespace Feedback.API.Disputes.GetDisputesByUnderReview;
 
-public class GetDisputesByUnderReviewHandler
-{
-}
-
 public record GetDisputesByUnderReviewQuery(int? PageNumber = 1, int? PageSize = 10) : IQuery<GetDisputesByUnderReviewResult>;
 
 public record GetDisputesByUnderReviewResult(IEnumerable<Review> Reviews);
