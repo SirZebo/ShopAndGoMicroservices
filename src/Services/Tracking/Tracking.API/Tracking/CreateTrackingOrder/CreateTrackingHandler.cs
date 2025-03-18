@@ -37,18 +37,22 @@ public class CreateTrackingCommandHandler : ICommandHandler<CreateTrackingComman
     {
          _logger.LogInformation($"Creating tracking order for {command.orderStatus.TrackingId}...");
 
-        var orderStatus = new OrderStatus
-        {
-            OrderId = command.orderStatus.OrderId,
-            TrackingId = command.orderStatus.TrackingId,
-            CreatedAt = DateTime.UtcNow,
-            Courier = command.orderStatus.Courier,
-            Status = command.orderStatus.Status,
-            UpdateTime = DateTime.UtcNow,
-            Name = command.orderStatus.Name
-        };
 
-        var orderStatusDto = MapToOrderStatusDto(orderStatus);
+        var orderStatus = command.orderStatus;
+        // var orderStatus = new OrderStatus
+        // {
+        //     OrderId = command.orderStatus.OrderId,
+        //     TrackingId = command.orderStatus.TrackingId,
+        //     CreatedAt = DateTime.UtcNow,
+        //     Courier = command.orderStatus.Courier,
+        //     Status = command.orderStatus.Status,
+        //     UpdateTime = DateTime.UtcNow,
+        //     FirstName = command.orderStatus.FirstName,
+        //     LastName = command.orderStatus.LastName
+        //     EmailAdress = command.orderStatus.Email
+        // };
+
+        var orderStatusDto = MapToOrderStatusDto(command.orderStatus);
 
         // save to database
         _session.Store(orderStatus);
@@ -74,7 +78,10 @@ public class CreateTrackingCommandHandler : ICommandHandler<CreateTrackingComman
             Courier = orderStatus.Courier,
             OrderId = orderStatus.OrderId.ToString(),
             CreatedAt = orderStatus.CreatedAt,
-            CustomerName = orderStatus.Name
+            CustomerName = orderStatus.FirstName +  " " + orderStatus.LastName,
+            EmailAddress = orderStatus.EmailAddress,
+            ZipCode = orderStatus.ZipCode
+
         };
     }
 

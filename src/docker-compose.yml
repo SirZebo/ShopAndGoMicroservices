@@ -1,12 +1,10 @@
 version: '3.4'
 
+#contanarise all services
 services:
   catalogdb:
     image: postgres
 
-  # basketdb:
-  #   image: postgres
-  
   distributedcache:
     image: redis
 
@@ -15,58 +13,62 @@ services:
 
   financedb:
     image: postgres
-  
-  trackingdb:
+
+  # trackingdb:
+  #   image: postgres
+
+  shippingdb:
     image: postgres
 
   jobschedulerdb:
     image: mcr.microsoft.com/mssql/server
 
+  feedbackdb:
+    image: postgres
+
   messagebroker:
     image: rabbitmq:management
 
   catalog.api:
-    image: ${DOCKER_REGISTRY-}catalogapi
+    image: boonyew/csc2102_mini_project:catalogapi
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
-  # basket.api:
-  #   image: ${DOCKER_REGISTRY-}basketapi
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Basket/Basket.API/Dockerfile
-
-  # discount.grpc:
-  #   image: ${DOCKER_REGISTRY-}discountgrpc
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Discount/Discount.Grpc/Dockerfile
-
   ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
+    image: boonyew/csc2102_mini_project:orderingapi
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
   finance.api:
-    image: ${DOCKER_REGISTRY-}financeapi
+    image: boonyew/csc2102_mini_project:financeapi
     build:
       context: .
       dockerfile: Services/Finance/Finance.API/Dockerfile
 
   jobscheduler.api:
-    image: ${DOCKER_REGISTRY-}jobschedulerapi
+    image: boonyew/csc2102_mini_project:jobschedulerapi
     build:
       context: .
       dockerfile: Services/JobScheduler/JobScheduler.API/Dockerfile
+
+  feedback.api:
+    image: boonyew/csc2102_mini_project:feedbackapi
+    build:
+      context: .
+      dockerfile: Services/Feedback/Feedback.API/Dockerfile
+
+  shipping.api:
+    image: boonyew/csc2102_mini_project:shippingapi
+    build:
+      context: .
+      dockerfile: Services/Shipping/Shipping.API/Dockerfile
 
 volumes:
   postgres_catalog:
   postgres_finance:
   postgres_tracking:
-  # postgres_basket:  
-
-
+  postgres_feedback:
 
 

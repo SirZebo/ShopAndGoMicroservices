@@ -8,6 +8,7 @@ public record OrderUpdatedToInProgressEvent : IntegrationEvent
     public int Quantity { get; set; } = default!;
     public TimeSpan MaxCompletionTime { get; set; }
     public int OrderStatus { get; set; } = default!;
+    public string Language { get; set; } = default!;
 
     // ShippingAddress
     public string FirstName { get; set; } = default!;

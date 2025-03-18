@@ -54,8 +54,8 @@ internal class UpdateTrackingByIdHandler : ICommandHandler<UpdateTrackingByIdCom
             return new UpdateTrackingByIdResult(false);
         }
 
-        order.Name = command.updateTrackingDto.CustomerName;
-        order.Status = command.updateTrackingDto.NewStatus;
+        order.FirstName = command.updateTrackingDto.FirstName;
+        order.LastName = command.updateTrackingDto.LastName;
 
 
         _logger.LogInformation($"Updating TrackingMore Order ID: {trackingMoreId}");

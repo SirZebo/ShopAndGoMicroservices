@@ -1,6 +1,8 @@
 ﻿using BuildingBlocks.Messaging.Events;
+using BuildingBlocks.Messaging.Events.Payments;
 using MassTransit;
 using Ordering.Application.Orders.Commands.UpdateOrder;
+using Ordering.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +33,31 @@ public class UpdateOrderStatusHandler
         dbContext.Orders.Update(order);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var eventMessage = MapToOrderUpdatedToInProgressEvent(order);
-        await publishEndpoint.Publish(eventMessage);
+        switch(order.Status)
+        {
+            case OrderStatus.InProgress:
+                var orderUpdatedToInProgressEvent = MapToOrderUpdatedToInProgressEvent(order);
+                await publishEndpoint.Publish(orderUpdatedToInProgressEvent);
+                break;
+            case OrderStatus.Completed:
+                var orderCompletedEvent = new OrderCompletedEvent
+                {
+                    OrderId = order.Id.Value,
+                    TotalPrice = order.TotalPrice,
+                };
+                await publishEndpoint.Publish(orderCompletedEvent);
+                break;
+            case OrderStatus.Cancelled:
+                var orderCancelledEvent = new OrderCancelledEvent 
+                {
+                    OrderId = order.Id.Value,
+                    TotalPrice = order.TotalPrice,
+                };
+                await publishEndpoint.Publish(orderCancelledEvent);
+                break;
+            default:
+                throw new OrderStatusNotFoundException(command.Order.Id);
+        }
 
         return new UpdateOrderStatusResult(true);
 
