@@ -49,14 +49,18 @@ internal class UpdateReviewCommandHandler
         review.FeedbackStatus = command.FeedbackStatus;
         review.Body = command.Body;
         review.LastModified = DateTime.UtcNow;
+
+        var reviewUpdatedEvent = new ReviewUpdatedEvent { ReviewId = review.Id };
+        await publishEndpoint.Publish(reviewUpdatedEvent, cancellationToken);
+
         if (review.FeedbackStatus == FeedbackStatus.Complaint)
         {
             review.DisputeStatus = DisputeStatus.UnderReview;
         }
         if (review.FeedbackStatus == FeedbackStatus.Satisfied)
         {
-            var eventMessage = new ReviewSatisfiedEvent { OrderId = review.Order.Id };
-            await publishEndpoint.Publish(eventMessage, cancellationToken);
+            var reviewSatisfiedEvent = new ReviewSatisfiedEvent { OrderId = review.Order.Id };
+            await publishEndpoint.Publish(reviewSatisfiedEvent, cancellationToken);
         }
 
         session.Update(review);

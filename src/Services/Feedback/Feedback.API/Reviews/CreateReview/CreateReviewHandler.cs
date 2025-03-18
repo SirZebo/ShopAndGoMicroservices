@@ -1,6 +1,8 @@
-﻿using Feedback.API.Dtos;
+﻿using BuildingBlocks.Messaging.Events.Review;
+using Feedback.API.Dtos;
 using Feedback.API.Enums;
 using Feedback.API.Model;
+using MassTransit;
 
 namespace Feedback.API.Reviews.CreateReview;
 
@@ -18,7 +20,8 @@ public class CreateReviewCommandValidator : AbstractValidator<CreateReviewComman
 }
 
 internal class CreateReviewCommandHandler
-    (IDocumentSession session)
+    (IPublishEndpoint publishEndpoint,
+    IDocumentSession session)
     : ICommandHandler<CreateReviewCommand, CreateReviewResult>
 {
     // Business logic to create a product
@@ -35,6 +38,12 @@ internal class CreateReviewCommandHandler
         // save to database
         session.Store(review);
         await session.SaveChangesAsync(cancellationToken);
+
+        var eventMessage = new ReviewCreatedEvent
+        {
+            ReviewId = review.Id,
+        };
+        await publishEndpoint.Publish(eventMessage);
 
         // return result
         return new CreateReviewResult(review.Id);

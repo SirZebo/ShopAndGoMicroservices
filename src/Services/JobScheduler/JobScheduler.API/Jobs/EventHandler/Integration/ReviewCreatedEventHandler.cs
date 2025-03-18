@@ -8,7 +8,7 @@ namespace JobScheduler.API.Jobs.EventHandler.Integration;
 public class ReviewCreatedEventHandler
     (IMessageScheduler scheduler,
     ApplicationDbContext dbContext,
-    ILogger<PaymentCreatedEventHandler> logger)
+    ILogger<ReviewCreatedEventHandler> logger)
     : IConsumer<ReviewCreatedEvent>
 {
     public async Task Consume(ConsumeContext<ReviewCreatedEvent> context)

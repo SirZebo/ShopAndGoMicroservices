@@ -33,6 +33,9 @@ public static class Extensions
             config.AddConsumer<ShipmentDeliveredEventHandler>() // Pub-Sub
                 .Endpoint(e => e.InstanceId = instanceId);
 
+            config.AddConsumer<ReviewUpdatedEventHandler>() // Pub-Sub
+                .Endpoint(e => e.InstanceId = instanceId);
+
             config.UsingRabbitMq((context, configurator) =>
             {
                 configurator.UsePublishMessageScheduler();
