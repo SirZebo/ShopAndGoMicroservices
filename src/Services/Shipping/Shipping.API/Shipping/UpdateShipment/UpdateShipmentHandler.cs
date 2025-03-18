@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Messaging.Events.Review;
 using BuildingBlocks.Messaging.Events.Shipments;
 using MassTransit;
+using Shipping.API.Exceptions;
 using Shipping.API.Model;
 
 namespace Shipping.API.Shipping.UpdateShipment;
@@ -14,7 +15,7 @@ public class UpdateReviewValidator : AbstractValidator<UpdateShipmentCommand>
     public UpdateReviewValidator()
     {
         RuleFor(command => command.Id)
-            .NotEmpty().WithMessage("Product Id is required");
+            .NotEmpty().WithMessage("Shipment Id is required");
 
         RuleFor(x => x.TrackingNumber)
             .NotEmpty().WithMessage("TrackingNumber is required")
@@ -32,12 +33,12 @@ internal class UpdateShipmentCommandHandler
 
         if (shipment is null)
         {
-            //throw new ReviewNotFoundException(command.Id);
+            throw new ShipmentNotFoundException(command.Id);
         }
 
         if (shipment.ShipmentStatus != Enums.ShipmentStatus.OrderReceived)
         {
-            //throw new ReviewAlreadySubmittedException(command.Id);
+            throw new ShipmentAlreadySubmittedException(command.Id);
         }
 
         shipment.ShipmentStatus = Enums.ShipmentStatus.Delivered; // Temporary Hard Coded

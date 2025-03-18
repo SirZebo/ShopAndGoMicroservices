@@ -1,4 +1,5 @@
-﻿using Shipping.API.Model;
+﻿using Shipping.API.Exceptions;
+using Shipping.API.Model;
 
 namespace Shipping.API.Shipping.GetShipmentById;
 
@@ -15,7 +16,7 @@ internal class GetShipmentByIdHandlerQueryHandler
 
         if (shipment is null)
         {
-            //throw new ReviewNotFoundException(query.Id);
+            throw new ShipmentNotFoundException(query.Id);
         }
 
         return new GetShipmentByIdResult(shipment);

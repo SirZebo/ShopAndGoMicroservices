@@ -1,4 +1,5 @@
-﻿using Shipping.API.Model;
+﻿using Shipping.API.Exceptions;
+using Shipping.API.Model;
 
 namespace Shipping.API.Shipping.GetShipmentsByMerchantId;
 
@@ -20,7 +21,7 @@ internal class GetShipmentsByMerchantIdQueryHandler
 
         if (shipments.IsEmpty())
         {
-            //throw new CustomerNotFoundException(query.CustomerId);
+            throw new MerchantNotFoundException(query.MerchantId);
         }
 
         return new GetShipmentsByCustomerIdResult(shipments);
