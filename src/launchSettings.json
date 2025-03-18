@@ -8,7 +8,8 @@
         "ordering.api": "StartDebugging",
         "finance.api": "StartDebugging",
         "jobscheduler.api": "StartDebugging",
-        "feedback.api": "StartDebugging"
+        "feedback.api": "StartDebugging",
+        "shipping.api": "StartDebugging"
       }
     }
   }

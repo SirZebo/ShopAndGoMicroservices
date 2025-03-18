@@ -2,6 +2,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
+using Shipping.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +27,8 @@ builder.Services.AddMarten(opts =>
     opts.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
-//if (builder.Environment.IsDevelopment())
-//    builder.Services.InitializeMartenWith<AccountInitialData>();
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<InitialData>();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
