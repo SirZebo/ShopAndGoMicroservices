@@ -1,0 +1,54 @@
+name: .NET Backend with Node.js Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Setup Node.js for the frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18 # Adjust if needed
+        cache: 'npm'
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend  # Adjust path if your frontend is in a different folder
+        npm install
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build  # Adjust if using a different build command
+
+    # Setup .NET for the backend
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore backend dependencies
+      run: |
+        cd backend  # Adjust path if needed
+        dotnet restore
+
+    - name: Build backend
+      run: |
+        cd backend
+        dotnet build --no-restore
+
+    - name: Test backend
+      run: |
+        cd backend
+        dotnet test --no-build --verbosity normal
