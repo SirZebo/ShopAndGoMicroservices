@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
   build:
 
@@ -15,6 +16,28 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+
+    # Setup .NET for the backend
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore backend dependencies
+      run: |
+        cd src
+        dotnet restore
+
+    - name: Build backend
+      run: |
+        cd src
+        dotnet build --no-restore
+
+    - name: Test backend
+      run: |
+        cd src
+        dotnet test --no-build --verbosity normal
+        
     # Setup Node.js for the frontend
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -31,24 +54,3 @@ jobs:
       run: |
         cd frontend
         npm run build  # Adjust if using a different build command
-
-    # Setup .NET for the backend
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
-    - name: Restore backend dependencies
-      run: |
-        cd backend  # Adjust path if needed
-        dotnet restore
-
-    - name: Build backend
-      run: |
-        cd backend
-        dotnet build --no-restore
-
-    - name: Test backend
-      run: |
-        cd backend
-        dotnet test --no-build --verbosity normal
