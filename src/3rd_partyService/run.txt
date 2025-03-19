@@ -1,0 +1,23 @@
+
+# Create a new virtual environment (they can name it venv)
+python -m venv venv
+
+activate venv 
+source venv/bin/activate
+
+run main 
+uvicorn main:app --reload
+
+create prisma db
+prisma migrate dev --name "init"
+
+
+For a successful payment, you can use the following card numbers:
+
+4444 3333 2222 1111 - non-3D Secure card
+5555 5555 5555 4444 - 3D Secure card
+For both cards, please use:
+
+any cardholder name
+any expiry larger or equal to the current month/year
+CVC = 123
