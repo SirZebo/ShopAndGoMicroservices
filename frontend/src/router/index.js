@@ -16,21 +16,26 @@ import ProfileView from '../views/ProfileView.vue';
 import OrderView from '../views/OrderView.vue';
 
 const routes = [
+  // For end user
   { path: '/', name: 'home', component: HomeView},
-  { path: '/products', name: 'ProductsView', component: ProductsView },
-  { path: '/products/:id', name: 'ProductDetailsView', component: ProductDetailsView, props: true },
-  { path: '/cart', name: 'CartView', component: CartView },
-  { path: '/checkout', name: 'CheckoutView', component: CheckoutView },
-  { path: '/order-confirmation', name: 'OrderConfirmationView', component: OrderConfirmationView },
-  { path: '/order-status', name: 'OrderStatusView', component: OrderStatusView },
-  { path: '/order-tracking', name: 'OrderTrackingView', component: OrderTrackingView },
-  { path: '/order-cancellation', name: 'OrderCancellationView', component: OrderCancellationView },
-  { path: '/review/:id', name: 'ReviewView', component: ReviewView, props: true },
-  { path: '/review-list', name: 'ReviewListView', component: ReviewListView },
-  { path: '/admin', name: 'AdminView', component: AdminView },
-  { path: '/shipment', name: 'ShipmentView', component: ShipmentView },
+  { path: '/enduser/products', name: 'ProductsView', component: ProductsView },
+  { path: '/enduser/products/:id', name: 'ProductDetailsView', component: ProductDetailsView, props: true },
+  { path: '/enduser/cart', name: 'CartView', component: CartView },
+  { path: '/enduser/checkout', name: 'CheckoutView', component: CheckoutView },
+  { path: '/enduser/order-confirmation', name: 'OrderConfirmationView', component: OrderConfirmationView },
+  { path: '/enduser/order-status', name: 'OrderStatusView', component: OrderStatusView },
+  { path: '/enduser/order-tracking', name: 'OrderTrackingView', component: OrderTrackingView },
+  { path: '/enduser/order-cancellation', name: 'OrderCancellationView', component: OrderCancellationView },
+  { path: '/enduser/review/:id', name: 'ReviewView', component: ReviewView, props: true },
+  { path: '/enduser/review-list', name: 'ReviewListView', component: ReviewListView },
   { path: '/enduser/profile', name: 'ProfileView', component: ProfileView },
-  { path: '/enduser/order', name: 'OrderView', component: OrderView }
+  { path: '/enduser/order', name: 'OrderView', component: OrderView },
+
+  // For admin
+  { path: '/admin/dispute', name: 'AdminView', component: AdminView },
+
+  // For SME
+  { path: '/sme/shipment', name: 'ShipmentView', component: ShipmentView }
 ]
 
 const router = createRouter({
