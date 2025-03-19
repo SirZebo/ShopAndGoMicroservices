@@ -10,6 +10,8 @@ import hmac
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
@@ -24,7 +26,13 @@ Xtm9VjZkFs2ksCAp0fEsVbsi4Xvy9uR7CWW+3R8aHxCljyDd8mYHJEa6hOTmBGmK
 Jt2D7tycDkcAyH0Eol37VWGWcYt67t2sDJBFfC1Fuxj4VpuqfLMb/6MrYEyYlCbE
 zwD/r4L5+nLTaCyu7ZPqsg5V+YylUeG83J052ppwGSYnAgMBAAE=
 -----END PUBLIC KEY-----"""
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (not recommended for production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
+)
 def verify_signature(payload: str, signature: str) -> bool:
     try:
         public_key = serialization.load_pem_public_key(PUBLIC_KEY_PEM.encode())

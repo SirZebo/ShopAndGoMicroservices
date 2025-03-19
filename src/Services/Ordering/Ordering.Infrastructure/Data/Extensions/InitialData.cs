@@ -36,7 +36,7 @@ internal class InitialData
             var order2 = Order.Create(
                             OrderId.Of(Guid.NewGuid()),
                             CustomerId.Of(new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d")),
-                            new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                            new Guid("58c49479-ec65-4de2-86e7-033c546291aa"),
                             Guid.NewGuid(),
                             OrderName.Of("ORD_2"),
                             shippingAddress: address2,
