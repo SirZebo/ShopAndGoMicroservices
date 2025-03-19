@@ -1,9 +1,7 @@
-from typing import Optional
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 import requests
 from requests import request
-import json
 import base64
 import hashlib
 import hmac
