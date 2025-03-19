@@ -1,0 +1,24 @@
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 5
+  interface            = "sync"
+}
+
+
+model Purchase {
+  id              Int     @id @default(autoincrement())
+  orderId         String  
+  purchaseAmount  Float   
+  orderStatus     OrderStatus @default(PENDING) // Use an enum for order status
+}
+
+enum OrderStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
