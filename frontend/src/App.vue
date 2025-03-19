@@ -8,8 +8,10 @@
     <!-- Navigation links on the right -->
     <div class="nav-links">
       <router-link to="/" class="nav-link">Home</router-link>
-      <router-link to="/products" class="nav-link">Products</router-link>
-      <router-link to="/cart" class="cart-link">
+      <router-link to="/enduser/products" class="nav-link">Products</router-link>
+      <router-link to="/enduser/review-list" class="nav-link">Reviews</router-link>
+      <router-link to="/enduser/profile" class="nav-link">Profile</router-link>
+      <router-link to="/enduser/cart" class="cart-link">
         Cart <span class="cart-count">{{ cartCount }}</span>
       </router-link>
     </div>

@@ -1,7 +1,10 @@
 <template>
   <div class="products">
-    <div class="product-list">
-      <!-- Loop through the product data -->
+    <!-- Show loading message while fetching products -->
+    <p v-if="loading">Loading products...</p>
+
+    <!-- Show products only when they are loaded -->
+    <div v-else class="product-list">
       <div v-for="product in products" :key="product.id" class="product-item">
         <img :src="`/assets/${product.imageFile}`" :alt="product.name" class="product-image" />
         <div class="product-info">
@@ -12,8 +15,9 @@
         </div>
       </div>
     </div>
+
     <!-- If no products, show a message -->
-    <p v-if="products.length === 0">No products available at the moment.</p>
+    <p v-if="!loading && products.length === 0">No products available at the moment.</p>
   </div>
 </template>
 
@@ -24,11 +28,12 @@ export default {
   name: 'ProductsView',
   data() {
     return {
-      products: [] // Initialize as an empty array
+      products: [], // Initialize as an empty array
+      loading: true, // Track if data is still loading
     };
   },
-  created() {
-    this.fetchProducts();
+  async beforeMount() {
+    await this.fetchProducts(); // Ensure products are fetched before mounting
   },
   methods: {
     async fetchProducts() {
@@ -38,6 +43,8 @@ export default {
         this.products = response.data.products || []; // Ensure it's an array
       } catch (error) {
         console.error('Error fetching products:', error);
+      } finally {
+        this.loading = false; // Hide loading indicator once done
       }
     },
     viewProduct(id) {
@@ -45,14 +52,13 @@ export default {
     }
   }
 };
-
 </script>
 
 <style scoped>
 .products {
-  margin-top: 100px;  /* Adjusted to ensure space between navbar and content */
-  padding: 0 20px; /* Added padding for mobile responsiveness */
-  margin-bottom: 50px; /* Added margin to match the home page's bottom spacing */
+  margin-top: 100px;  
+  padding: 0 20px; 
+  margin-bottom: 50px; 
 }
 
 .product-list {

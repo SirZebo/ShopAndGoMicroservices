@@ -1,21 +1,28 @@
 <template>
   <div class="review-page">
     <h1>Review Details</h1>
-    <h2>Review Status: {{ reviewStatusText }}</h2>
 
-    <!-- Show review content -->
-    <p><strong>Review Body:</strong> {{ review.body }}</p>
-    <p><strong>Order Item:</strong> {{ getProductName(review.order.productId) }}</p>
-    <p><strong>Order Quantity:</strong> {{ review.order.quantity }}</p>
+    <!-- Show loading state -->
+    <p v-if="loading">Loading review...</p>
 
-    <!-- Review Form -->
-    <div v-if="!reviewSubmitted" class="review-form">
-      <textarea v-model="review.body" :disabled="reviewSubmitted" placeholder="Update your review here..." rows="5"></textarea>
-      <button @click="submitReview" :disabled="!isFormValid">Update Review</button>
-    </div>
+    <!-- Show review content when data is loaded -->
+    <div v-else>
+      <h2>Review Status: {{ reviewStatusText }}</h2>
 
-    <div v-if="reviewSubmitted" class="success-message">
-      <p>Your review has been updated.</p>
+      <p><strong>Review Body:</strong> {{ review.body }}</p>
+      <p><strong>Order Item:</strong> {{ getProductName(review.order.productId) }}</p>
+      <p><strong>Order Quantity:</strong> {{ review.order.quantity }}</p>
+
+      <!-- Review Form -->
+      <div v-if="!reviewSubmitted" class="review-form">
+        <textarea v-model="review.body" :disabled="reviewSubmitted" placeholder="Update your review here..." rows="5"></textarea>
+        <button @click="submitReview" :disabled="!isFormValid">Update Review</button>
+      </div>
+
+      <!-- Success message -->
+      <div v-if="reviewSubmitted" class="success-message">
+        <p>Your review has been updated.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -30,12 +37,14 @@ export default {
       review: {
         id: '',
         body: '',
+        feedbackStatus: 0, // Default to prevent undefined errors
         order: {
           productId: '',
           quantity: 0
         }
       },
       products: [],
+      loading: true, // Added loading state
       reviewSubmitted: false
     };
   },
@@ -47,26 +56,24 @@ export default {
       return this.review.body.trim().length > 0;
     }
   },
-  async created() {
-    const reviewId = this.$route.params.id;
-    await this.fetchReview(reviewId);
-    await this.fetchProducts();
+  async beforeMount() {
+    await this.fetchData();
   },
   methods: {
-    async fetchReview(reviewId) {
+    async fetchData() {
       try {
-        const response = await axios.get(`https://localhost:6065/reviews/${reviewId}`);
-        this.review = response.data.review;
+        const reviewId = this.$route.params.id;
+        const [reviewResponse, productsResponse] = await Promise.all([
+          axios.get(`https://localhost:6065/reviews/${reviewId}`),
+          axios.get("https://localhost:6060/products?pageNumber=1&pageSize=10"),
+        ]);
+
+        this.review = reviewResponse.data.review || this.review;
+        this.products = productsResponse.data.products || [];
       } catch (error) {
-        console.error("Error fetching review:", error);
-      }
-    },
-    async fetchProducts() {
-      try {
-        const response = await axios.get("https://localhost:6060/products?pageNumber=1&pageSize=10");
-        this.products = response.data.products;
-      } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching data:", error);
+      } finally {
+        this.loading = false; // Hide loading indicator
       }
     },
     getProductName(productId) {
@@ -75,28 +82,22 @@ export default {
     },
     async submitReview() {
       try {
-        const hardcodedReview = {
-          id: "2d517904-c141-47cf-9ba2-6eb5f015570f",
-          feedbackStatus: 2,
-          body: "Bad review"
+        const updatedReview = {
+          id: this.review.id,
+          feedbackStatus: this.review.feedbackStatus,
+          body: this.review.body
         };
 
-        const response = await axios.put(`https://localhost:6065/reviews`, hardcodedReview);
+        await axios.put(`https://localhost:6065/reviews`, updatedReview);
+        this.reviewSubmitted = true;
 
-        // Store response message
-        this.reviewResponse = `Success: ${response.detail}`;
+        setTimeout(() => {
+          this.$router.push('/review-list'); // Redirect after update
+        }, 1500);
       } catch (error) {
-        // Capture error message
-        this.reviewResponse = `Error: ${error.response?.status || 'Unknown'}`;
-      } finally {
-        // Redirect to review-list no matter what
-        this.$router.push('/review-list');
+        console.error("Error updating review:", error);
       }
     }
-
-
-
-
   }
 };
 </script>
