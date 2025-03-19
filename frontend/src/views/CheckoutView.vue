@@ -14,18 +14,33 @@
     <h2>Shipping Information</h2>
     <form @submit.prevent="submitOrder">
       <div class="form-group">
-        <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" v-model="shippingInfo.fullName" required />
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" v-model="shippingInfo.firstName" required />
       </div>
 
       <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" id="address" v-model="shippingInfo.address" required />
+        <label for="lastname">Last Name</label>
+        <input type="text" id="lastname" v-model="shippingInfo.lastName" required />
       </div>
 
       <div class="form-group">
-        <label for="city">City</label>
-        <input type="text" id="city" v-model="shippingInfo.city" required />
+        <label for="emailaddress">Email Address</label>
+        <input type="text" id="emailaddress" v-model="shippingInfo.emailAddress" required />
+      </div>
+
+      <div class="form-group">
+        <label for="addressLine">Address</label>
+        <input type="text" id="addressLine" v-model="shippingInfo.addressLine" required />
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" v-model="shippingInfo.country" required />
+      </div>
+
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" id="state" v-model="shippingInfo.state" required />
       </div>
 
       <div class="form-group">
@@ -48,34 +63,76 @@
 
 <script>
 import { cartStore } from '@/store/cartStore';
+import axios from 'axios';
 
 export default {
   name: 'CheckoutView',
   data() {
     return {
       shippingInfo: {
-        fullName: '',
-        address: '',
-        city: '',
-        postalCode: ''
+        firstName: '',
+        lastName: '',
+        addressLine: '',
+        postalCode: '',
+        country: '',
+        state: ''
       },
       paymentInfo: {
         creditCard: ''
-      }
+      },
+      userName: 'Test',
+      customerId: 'db7a48da-79b0-4a29-ba03-00deb540baec',
+      merchantId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
+      maxCompletionTime: '3.00:00:00',
+      language: 'Malay',
+      emailAddress: ''
     };
   },
   computed: {
     cartItems() {
-      return cartStore.getCart(); // Get the cart items
+      return cartStore.getCart();
     },
     totalPrice() {
-      return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0); // Calculate the total price
+      return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    },
+    cartItemsWithIds() {
+      return this.cartItems.map(item => ({
+        productId: item.id,
+        price: item.price,
+        quantity: item.quantity
+      }));
     }
   },
   methods: {
-    submitOrder() {
-      // Redirect the user to the order status page after placing the order
-      this.$router.push('/order-status');
+    async submitOrder() {
+      try {
+        const orderData = {
+          CheckoutProductDto: {
+            userName: this.userName,
+            CustomerId: this.customerId,
+            ProductId: '4f136e9f-ff8c-4c1f-9a33-d12f689bdab8',
+            MerchantId: this.merchantId,
+            Price: this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+            Quantity: this.cartItems.reduce((total, item) => total + item.quantity, 0),
+            totalPrice: this.totalPrice,
+            MaxCompletionTime: this.maxCompletionTime,
+            Lanugage: this.language,
+            firstName: this.shippingInfo.firstName,
+            lastName: this.shippingInfo.lastName,
+            emailAddress: this.shippingInfo.emailAddress,
+            addressLine: this.shippingInfo.addressLine,
+            country: this.shippingInfo.country,
+            state: this.shippingInfo.state,
+            zipCode: this.shippingInfo.postalCode
+          }
+        };
+
+        const response = await axios.post('https://localhost:6060/product/checkout', orderData);
+        console.log('Transaction Token:', response.data.transactionToken);
+        this.$router.push('/order-status');
+      } catch (error) {
+        console.error('Checkout failed:', error);
+      }
     }
   }
 };
