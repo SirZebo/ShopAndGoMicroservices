@@ -1,0 +1,10 @@
+env/
+__pycache__/
+
+*.env
+*.env.*
+env.*
+.vscode
+*.sql
+*.vscode
+*.git

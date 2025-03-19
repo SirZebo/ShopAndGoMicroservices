@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  chipServiceDB:
+    image: postgres
+    ports:
+      - "5436:5432"  # Left is external, right is internal
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  chip.api:
+    build: .
+    command: sh -c "uvicorn main:app --reload --port=8081 --host=0.0.0.0"  # Corrected command
+    ports:
+      - 6006:8080 #http
+      - 6066:8081 #https
+    depends_on:
+      - chipServiceDB
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@chipServiceDB:5432/postgres?schema=public  
+      #Server=chipServiceDb;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
