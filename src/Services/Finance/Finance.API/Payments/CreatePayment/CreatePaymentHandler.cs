@@ -49,8 +49,8 @@ public class CreatePaymentCommandHandler
         session.Store(payment);
         await session.SaveChangesAsync(cancellationToken);
 
-        var eventMessage = MapToPaymentCreatedEvent(payment);
-        await publishEndpoint.Publish(eventMessage, cancellationToken);
+        //var eventMessage = MapToPaymentCreatedEvent(payment);
+        //await publishEndpoint.Publish(eventMessage, cancellationToken);
 
         var commercePayStartedEvent = new CommercePayStartedEvent
         {
@@ -60,11 +60,11 @@ public class CreatePaymentCommandHandler
         };
         //await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
 
-        await httpClient.PostAsJsonAsync("https://localhost:6066/transaction", new 
-        { 
-            PaymentId = payment.Id, 
-            TransactionToken = payment.TransactionToken, 
-            TransactionAmount = payment.OutstandingAmount 
+        await httpClient.PostAsJsonAsync("http://localhost:6066/createPurchase", new RequestJson
+        {
+            PaymentId = payment.Id,
+            TransactionToken = payment.TransactionToken,
+            TransactionAmount = (float) payment.OutstandingAmount
         });
 
         if (payment.OutstandingAmount == 0)
@@ -102,6 +102,13 @@ public class CreatePaymentCommandHandler
             TransactionToken = payment.TransactionToken,
             TotalPrice = payment.TotalPrice,
         };
+    }
+
+    public class RequestJson
+    {
+        public Guid PaymentId { get; set; }
+        public Guid TransactionToken { get; set; }
+        public float TransactionAmount { get; set; }
     }
 
 }

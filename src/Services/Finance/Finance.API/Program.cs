@@ -36,10 +36,10 @@ builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAs
 
 builder.Services.AddHttpClient();
 
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    options.ListenAnyIP(6005); // Allows connections from any IP
-//});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(6066); // Allows connections from any IP
+});
 
 // Cross-Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
