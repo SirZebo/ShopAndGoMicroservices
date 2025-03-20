@@ -52,15 +52,20 @@ class CreatePurchaseDto(BaseModel):
     TransactionToken: str
     TransactionAmount: float
 
+class PurchaseSuccessDto(BaseModel):
+    TransactionToken: str
+
 # each transaction token has 3 values: tokenid, purchaseUrl, message, status
 
 TransactionToken_cache = {
     "efcb42e3-8883-4197-ac21-a82a9ddcbcf4": {
+        "paymentId": "efcb42e3-8883-4197-ac21-a82a9ddcbcf4",
         "purchaseUrl": "https://gate.chip-in.asia/p/456e3e62-dc9b-42e0-8e91-cab5a20266e6/",
         "message": "",
         "status": "pending"
     },
     "efcb42e3-8883-4197-ac21-3123nbioasd": {
+        "paymentId": "efcb42e3-8883-4197-ac21-3123nbioasd",
         "purchaseUrl": "",
         "message": "already paid from wallet",
         "status": "success"
@@ -140,6 +145,16 @@ def create_purchase(dto: CreatePurchaseDto):
 
     print("Purchase details saved in cache.")
     return TransactionToken_cache[dto.TransactionToken]
+
+@app.post("/success_callback")
+def purchase_success_callback(dto: PurchaseSuccessDto):
+    print("Starting purchase_success_callback function...")
+    #dto.TransactionToken 
+    #post into an endpoint to update the status of the transaction token
+    #body 
+    payload = {
+        "status": "success"
+    }
 
 # @app.post("/success_callback")                                                            
 # async def purchase_success_callback(request: Request):
