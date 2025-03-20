@@ -1,14 +1,6 @@
 version: "3"
 
 services:
-  chipServiceDB:
-    image: postgres
-    ports:
-      - "5436:5432"  # Left is external, right is internal
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
   chip.api:
     build: .
     command: sh -c "uvicorn main:app --reload --port=8081 --host=0.0.0.0"  # Corrected command
