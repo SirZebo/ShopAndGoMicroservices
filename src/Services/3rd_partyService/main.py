@@ -48,16 +48,20 @@ def verify_signature(payload: str, signature: str) -> bool:
         return False
     
 class CreatePurchaseDto(BaseModel):
-    PaymentId: str
-    TransactionToken: str
-    TransactionAmount: float
+    paymentId: str
+    transactionToken: str
+    transactionAmount: float
 
 class PurchaseSuccessDto(BaseModel):
-    PaymentId: str
+    paymentId: str
 
-# each transaction token has 3 values: tokenid, purchaseUrl, message, status
+# Define the schema for the incoming JSON payload
+class PurchaseCallback(BaseModel):
+    transaction_token: str
+    event_type: str
+    status: str
 
-TransactionToken_cache = {
+transactionToken_cache = {
     "efcb42e3-8883-4197-ac21-a82a9ddcbcf4": {
         "paymentId": "efcb42e3-8883-4197-ac21-a82a9ddcbcf4",
         "purchaseUrl": "https://gate.chip-in.asia/p/456e3e62-dc9b-42e0-8e91-cab5a20266e6/",
@@ -73,7 +77,7 @@ TransactionToken_cache = {
 }
 
 @app.get("/getPurchaseUrl")
-def get_purchase_url(TransactionToken: str):
+def get_purchase_url(transactionToken: str):
     print("Starting get_purchase_url function...")
     #todo
     # 1. check cache d
@@ -81,10 +85,11 @@ def get_purchase_url(TransactionToken: str):
     # 3. if not found, return error message
     
     # Simulate checking the token in a database
-    for tokenid, token in TransactionToken_cache.items():
-        if tokenid == TransactionToken:
+    for tokenid, token in transactionToken_cache.items():
+        if tokenid == transactionToken:
             print("Transaction token found in cache")  
             return {
+                "paymentId": token["paymentId"],
                 "purchaseUrl": token["purchaseUrl"],
                 "message": token["message"],
                 "status": token["status"]
@@ -95,26 +100,26 @@ def get_purchase_url(TransactionToken: str):
 def create_purchase(dto: CreatePurchaseDto):
     print("Starting create_purchase function...")  # Debugging print
 
-    if dto.TransactionAmount < 0:
+    if dto.transactionAmount < 0:
         raise HTTPException(status_code=400, detail="Transaction amount cannot be negative")
     
-    if dto.TransactionAmount == 0:
-        TransactionToken_cache[dto.TransactionToken] = {
-            "PaymentId": dto.PaymentId,
+    if dto.transactionAmount == 0:
+        transactionToken_cache[dto.transactionToken] = {
+            "paymentId": dto.paymentId,
             "purchaseUrl": "",
             "message": "already paid from wallet",
             "status": "success"
         }
-        return TransactionToken_cache[dto.TransactionToken]
+        return transactionToken_cache[dto.transactionToken]
 
     url = "https://gate.chip-in.asia/api/v1/purchases/"
-    amount = int(dto.TransactionAmount * 100)
+    amount = int(dto.transactionAmount * 100)
     payload = {
         "client": {"email": "service@dashapp.asia"},
         "purchase": {
             "products": [
                 {
-                    "name": dto.TransactionToken,
+                    "name": dto.transactionToken,
                     "price": amount,
                 }
             ],
@@ -136,30 +141,42 @@ def create_purchase(dto: CreatePurchaseDto):
 
     purchase_url = response.json().get("checkout_url", "") if response.status_code == 201 else ""
 
-    TransactionToken_cache[dto.TransactionToken] = {
-        "PaymentId": dto.PaymentId,
+    transactionToken_cache[dto.transactionToken] = {
+        "paymentId": dto.paymentId,
         "purchaseUrl": purchase_url,
         "message": "",
         "status": "pending"
     }
 
     print("Purchase details saved in cache.")
-    return TransactionToken_cache[dto.TransactionToken]
+    return transactionToken_cache[dto.transactionToken]
 
 @app.post("/success_callback")
 def purchase_success_callback(dto: PurchaseSuccessDto):
     print("Starting purchase_success_callback function...")
-    #dto.TransactionToken 
+    #dto.transactionToken 
     #post into an endpoint to update the status of the transaction token
     #body 
     payload = {
-        "PaymentId": dto.PaymentId 
+        "paymentId": dto.paymentId 
     }
     url ="https://localhost:6061/payments/receive"
     
     response = requests.post(url, json=payload)
     return response.json()
 
+# Define the POST endpoint to handle the callback
+@app.post("/chip_success_callback")
+async def chip_success_callback(callback: PurchaseCallback):
+    print("Starting chip_success_callback function...")
+    print(f"Received transaction_token: {callback.transaction_token}")
+    print(f"Received event_type: {callback.event_type}")
+    print(f"Received status: {callback.status}")
+    
+    # Optionally, you could validate the signature here
+
+    return {"message": "Callback received successfully", "status": "success"
+    
 # @app.post("/success_callback")                                                            
 # async def purchase_success_callback(request: Request):
 #     body = await request.body()
