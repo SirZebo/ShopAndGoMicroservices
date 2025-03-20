@@ -2,6 +2,13 @@ version: '3.4'
 
 #contanarise all services
 services:
+
+  frontend:
+    image: boonyew/csc2102_mini_project:frontend
+    build:
+      #context: ../../Mini-Project-Cindy/ShopAndGoMicroservices-cindy-frontend/frontend
+      context: ../frontend
+      dockerfile: dockerfile
   catalogdb:
     image: postgres
 
