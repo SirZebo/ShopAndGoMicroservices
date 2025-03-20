@@ -160,7 +160,7 @@ def purchase_success_callback(dto: PurchaseSuccessDto):
     payload = {
         "paymentId": dto.paymentId 
     }
-    url ="https://localhost:6061/payments/receive"
+    url ="https://finance.api:8081/payments/receive"
     
     response = requests.post(url, json=payload)
     return response.json()
