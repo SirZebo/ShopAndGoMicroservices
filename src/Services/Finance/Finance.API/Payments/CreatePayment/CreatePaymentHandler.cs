@@ -3,6 +3,11 @@ using Finance.API.Dtos;
 using Finance.API.Exceptions;
 using Finance.API.Payments.MakePayment;
 using MassTransit;
+using Microsoft.Net.Http.Headers;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Finance.API.Payments.CreatePayment;
 
@@ -12,7 +17,7 @@ public record CreatePaymentCommand(PaymentDto Payment)
 public record CreatePaymentResult(Guid Id);
 
 public class CreatePaymentCommandHandler
-    (IPublishEndpoint publishEndpoint, IDocumentSession session, ISender sender)
+    (IPublishEndpoint publishEndpoint, IDocumentSession session, ISender sender, HttpClient httpClient)
     : ICommandHandler<CreatePaymentCommand, CreatePaymentResult>
 {
     public async Task<CreatePaymentResult> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
@@ -47,22 +52,43 @@ public class CreatePaymentCommandHandler
         var eventMessage = MapToPaymentCreatedEvent(payment);
         await publishEndpoint.Publish(eventMessage, cancellationToken);
 
-        if (payment.OutstandingAmount != 0)
+        var commercePayStartedEvent = new CommercePayStartedEvent
         {
-            var commercePayStartedEvent = new CommercePayStartedEvent
-            {
-                PaymentId = payment.Id,
-                TransactionToken = payment.TransactionToken,
-                TransactionAmount = payment.OutstandingAmount
-            };
-            await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
-        } else
+            PaymentId = payment.Id,
+            TransactionToken = payment.TransactionToken,
+            TransactionAmount = payment.OutstandingAmount
+        };
+        //await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+
+        await httpClient.PostAsJsonAsync("http://localhost:6005/transaction/start", new 
+        { 
+            PaymentId = payment.Id, 
+            TransactionToken = payment.TransactionToken, 
+            TransactionAmount = payment.OutstandingAmount 
+        });
+
+        if (payment.OutstandingAmount == 0)
         {
             var makePaymentCommand = new MakePaymentCommand(payment.Id);
             await sender.Send(makePaymentCommand);
         }
 
-        
+        //if (payment.OutstandingAmount != 0)
+        //{
+        //    var commercePayStartedEvent = new CommercePayStartedEvent
+        //    {
+        //        PaymentId = payment.Id,
+        //        TransactionToken = payment.TransactionToken,
+        //        TransactionAmount = payment.OutstandingAmount
+        //    };
+        //    await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+        //} else
+        //{
+        //    var makePaymentCommand = new MakePaymentCommand(payment.Id);
+        //    await sender.Send(makePaymentCommand);
+        //}
+
+
 
         // return result
         return new CreatePaymentResult(payment.Id);

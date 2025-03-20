@@ -34,6 +34,13 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 // Async Communication Services
 builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
+builder.Services.AddHttpClient();
+
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(6005); // Allows connections from any IP
+//});
+
 // Cross-Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
