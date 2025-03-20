@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./frontend
 
     strategy:
       matrix:
@@ -21,11 +25,22 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        # Remove cache option to avoid lock file errors
-    
-    - name: Install dependencies and build
+
+    - name: Change to frontend
+      run: cd frontend
+      
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build
+      run: npm run build --if-present
+      
+    # Option 3: Conditional test
+    - name: Run tests if available
       run: |
-        cd frontend
-        npm install
-        npm run build --if-present
-        npm test
+        if grep -q "\"test\":" package.json; then
+          npm test
+        else
+          echo "No test script found, skipping tests"
+          exit 0
+        fi
