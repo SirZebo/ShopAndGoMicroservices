@@ -4,7 +4,6 @@ using Finance.API.Exceptions;
 using Finance.API.Payments.MakePayment;
 using MassTransit;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -50,8 +49,8 @@ public class CreatePaymentCommandHandler
         session.Store(payment);
         await session.SaveChangesAsync(cancellationToken);
 
-        //var eventMessage = MapToPaymentCreatedEvent(payment);
-        //await publishEndpoint.Publish(eventMessage, cancellationToken);
+        var eventMessage = MapToPaymentCreatedEvent(payment);
+        await publishEndpoint.Publish(eventMessage, cancellationToken);
 
         var commercePayStartedEvent = new CommercePayStartedEvent
         {
@@ -61,25 +60,16 @@ public class CreatePaymentCommandHandler
         };
         //await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
         var httpClient = httpClientFactory.CreateClient();
-        var json = new RequestJson { PaymentId= payment.Id, TransactionAmount = (float) payment.OutstandingAmount, TransactionToken = payment.TransactionToken};
-        var result = await httpClient.PostAsJsonAsync("http://chip-api:8080/createPurchase", json);
+        var json = new { PaymentId= payment.Id, TransactionAmount = (float) payment.OutstandingAmount, TransactionToken = payment.TransactionToken};
+        var jsonPayload = JsonSerializer.Serialize(json, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = null, // Ensure property names are not modified
+            WriteIndented = true // Optional: for pretty-printing
+        });
+        var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+        var result = await httpClient.PostAsync("http://chip-api:8080/createPurchase", content);
         string resultContent = await result.Content.ReadAsStringAsync();
         Console.WriteLine($"Server returned {resultContent}");
-
-
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    // Success: Inspect the response body
-        //    string responseBody = await response.Content.ReadAsStringAsync();
-        //    Console.WriteLine("Response Body: " + responseBody);
-        //}
-        //else
-        //{
-        //    // Error: Inspect the status code and possibly the error message
-        //    Console.WriteLine($"Error: {response.StatusCode}");
-        //    string errorBody = await response.Content.ReadAsStringAsync();
-        //    Console.WriteLine("Error Details: " + errorBody);
-        //}
 
         if (payment.OutstandingAmount == 0)
         {
