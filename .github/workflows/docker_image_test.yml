@@ -22,5 +22,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Run docker compose
+      uses: hoverkraft-tech/compose-action@v2.0.1
+      with:
+          compose-file: "./docker/docker-compose.yml"
+
+    - name: Execute tests in the running services
+      run: |
+          docker compose exec test-app pytest
