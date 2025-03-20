@@ -2,6 +2,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,7 @@ builder.Services.AddHttpClient();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(6066); // Allows connections from any IP
+    options.Listen(IPAddress.Any, 8080); // Ensure it's listening on port 6066
 });
 
 // Cross-Cutting Services
