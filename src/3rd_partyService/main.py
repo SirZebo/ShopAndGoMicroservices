@@ -48,12 +48,13 @@ def verify_signature(payload: str, signature: str) -> bool:
         return False
     
 class CreatePurchaseDto(BaseModel):
-    transactionToken: str
-    purchaseAmount: float
+    PaymentId: str
+    TransactionToken: str
+    TransactionAmount: float
 
 # each transaction token has 3 values: tokenid, purchaseUrl, message, status
 
-transactionToken_cache = {
+TransactionToken_cache = {
     "efcb42e3-8883-4197-ac21-a82a9ddcbcf4": {
         "purchaseUrl": "https://gate.chip-in.asia/p/456e3e62-dc9b-42e0-8e91-cab5a20266e6/",
         "message": "",
@@ -67,7 +68,7 @@ transactionToken_cache = {
 }
 
 @app.get("/getPurchaseUrl")
-def get_purchase_url(transactionToken: str):
+def get_purchase_url(TransactionToken: str):
     print("Starting get_purchase_url function...")
     #todo
     # 1. check cache d
@@ -75,8 +76,8 @@ def get_purchase_url(transactionToken: str):
     # 3. if not found, return error message
     
     # Simulate checking the token in a database
-    for tokenid, token in transactionToken_cache.items():
-        if tokenid == transactionToken:
+    for tokenid, token in TransactionToken_cache.items():
+        if tokenid == TransactionToken:
             print("Transaction token found in cache")  
             return {
                 "purchaseUrl": token["purchaseUrl"],
@@ -89,25 +90,26 @@ def get_purchase_url(transactionToken: str):
 def create_purchase(dto: CreatePurchaseDto):
     print("Starting create_purchase function...")  # Debugging print
 
-    if dto.purchaseAmount < 0:
-        raise HTTPException(status_code=400, detail="purchaseAmount cannot be negative")
+    if dto.TransactionAmount < 0:
+        raise HTTPException(status_code=400, detail="Transaction amount cannot be negative")
     
-    if dto.purchaseAmount == 0:
-        transactionToken_cache[dto.transactionToken] = {
+    if dto.TransactionAmount == 0:
+        TransactionToken_cache[dto.TransactionToken] = {
+            "PaymentId": dto.PaymentId,
             "purchaseUrl": "",
             "message": "already paid from wallet",
             "status": "success"
         }
-        return transactionToken_cache[dto.transactionToken]
+        return TransactionToken_cache[dto.TransactionToken]
 
     url = "https://gate.chip-in.asia/api/v1/purchases/"
-    amount = int(dto.purchaseAmount * 100)
+    amount = int(dto.TransactionAmount * 100)
     payload = {
         "client": {"email": "service@dashapp.asia"},
         "purchase": {
             "products": [
                 {
-                    "name": dto.transactionToken,
+                    "name": dto.TransactionToken,
                     "price": amount,
                 }
             ],
@@ -129,14 +131,15 @@ def create_purchase(dto: CreatePurchaseDto):
 
     purchase_url = response.json().get("checkout_url", "") if response.status_code == 201 else ""
 
-    transactionToken_cache[dto.transactionToken] = {
+    TransactionToken_cache[dto.TransactionToken] = {
+        "PaymentId": dto.PaymentId,
         "purchaseUrl": purchase_url,
         "message": "",
         "status": "pending"
     }
 
     print("Purchase details saved in cache.")
-    return transactionToken_cache[dto.transactionToken]
+    return TransactionToken_cache[dto.TransactionToken]
 
 # @app.post("/success_callback")
 # async def purchase_success_callback(request: Request):
