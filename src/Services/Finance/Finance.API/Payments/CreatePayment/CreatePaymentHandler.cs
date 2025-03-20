@@ -58,16 +58,12 @@ public class CreatePaymentCommandHandler
             TransactionToken = payment.TransactionToken,
             TransactionAmount = payment.OutstandingAmount
         };
-        //await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+        await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
+
         var httpClient = httpClientFactory.CreateClient();
         var json = new { PaymentId= payment.Id, TransactionAmount = (float) payment.OutstandingAmount, TransactionToken = payment.TransactionToken};
-        var jsonPayload = JsonSerializer.Serialize(json, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = null, // Ensure property names are not modified
-            WriteIndented = true // Optional: for pretty-printing
-        });
-        var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
-        var result = await httpClient.PostAsync("http://chip-api:8080/createPurchase", content);
+
+        var result = await httpClient.PostAsJsonAsync("http://chip-api:8080/createPurchase", json);
         string resultContent = await result.Content.ReadAsStringAsync();
         Console.WriteLine($"Server returned {resultContent}");
 

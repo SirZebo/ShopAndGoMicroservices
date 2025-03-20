@@ -161,8 +161,7 @@ def purchase_success_callback(dto: PurchaseSuccessDto):
         "paymentId": dto.paymentId 
     }
     url ="https://finance.api:8081/payments/receive"
-    
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, verify=False)
     return response.json()
 
 # Define the POST endpoint to handle the callback

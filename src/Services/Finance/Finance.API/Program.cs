@@ -37,10 +37,11 @@ builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAs
 
 builder.Services.AddHttpClient();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.Listen(IPAddress.Any, 8080); // Ensure it's listening on port 6066
-});
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.Listen(IPAddress.Any, 8080); // Ensure it's listening on port 6066
+//    options.Listen(IPAddress.Any, 8081); // Ensure it's listening on port 6066
+//});
 
 // Cross-Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();

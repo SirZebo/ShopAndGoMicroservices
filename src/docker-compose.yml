@@ -79,6 +79,8 @@ services:
     command: sh -c "uvicorn main:app --reload --port=8080 --host=0.0.0.0"  # Listen on port 8080
     ports:
         - "6006:8080"  # Map host port 6006 to container port 8080
+    volumes:
+        - ./Services/3rd_partyService:/app
 
 volumes:
   postgres_catalog:
