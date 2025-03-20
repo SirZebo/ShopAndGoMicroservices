@@ -24,6 +24,7 @@ Xtm9VjZkFs2ksCAp0fEsVbsi4Xvy9uR7CWW+3R8aHxCljyDd8mYHJEa6hOTmBGmK
 Jt2D7tycDkcAyH0Eol37VWGWcYt67t2sDJBFfC1Fuxj4VpuqfLMb/6MrYEyYlCbE
 zwD/r4L5+nLTaCyu7ZPqsg5V+YylUeG83J052ppwGSYnAgMBAAE=
 -----END PUBLIC KEY-----"""
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins (not recommended for production)
@@ -47,7 +48,7 @@ def verify_signature(payload: str, signature: str) -> bool:
         return False
     
 class CreatePurchaseDto(BaseModel):
-    orderId: str
+    transactionToken: str
     purchaseAmount: float
 
 # each transaction token has 3 values: tokenid, purchaseUrl, message, status
@@ -84,62 +85,58 @@ def get_purchase_url(transactionToken: str):
             }
     return {"error": "Transaction token not found"}
 
-# @app.post("/createPurchase")
-# def create_purchase(dto: CreatePurchaseDto):
-#     print("Starting create_purchase function...")  # Debugging print
+@app.post("/createPurchase")
+def create_purchase(dto: CreatePurchaseDto):
+    print("Starting create_purchase function...")  # Debugging print
 
-#     # 1. Make the Chip-in API call
-#     url = "https://gate.chip-in.asia/api/v1/purchases/"
-#     amount = int(dto.purchaseAmount * 100)
-#     payload = {
-#         "client": {"email": "service@dashapp.asia"},
-#         "purchase": {
-#             "products": [
-#                 {
-#                     "name": dto.orderId,
-#                     "price": amount,
-#                 }
-#             ],
-#             "currency": "SGD"
-#         },
-#         "brand_id": "0579c452-295d-4048-a277-1d28946ffa0f",
-#         "payment_method_whitelist": ["visa", "mastercard"],
-#     }
+    if dto.purchaseAmount < 0:
+        raise HTTPException(status_code=400, detail="purchaseAmount cannot be negative")
+    
+    if dto.purchaseAmount == 0:
+        transactionToken_cache[dto.transactionToken] = {
+            "purchaseUrl": "",
+            "message": "already paid from wallet",
+            "status": "success"
+        }
+        return transactionToken_cache[dto.transactionToken]
 
-#     headers = {
-#         "Authorization": "Bearer nAzoWQCXaR04dtGVHh5iCcDpH6-sEKjZx5WbbDJoyKAbraK1MARW7y1FdRXCoHcK9vxB1BqJ3nLiOUndgIzSWg==",
-#         "Content-Type": "application/json"
-#     }
+    url = "https://gate.chip-in.asia/api/v1/purchases/"
+    amount = int(dto.purchaseAmount * 100)
+    payload = {
+        "client": {"email": "service@dashapp.asia"},
+        "purchase": {
+            "products": [
+                {
+                    "name": dto.transactionToken,
+                    "price": amount,
+                }
+            ],
+            "currency": "SGD"
+        },
+        "brand_id": "0579c452-295d-4048-a277-1d28946ffa0f",
+        "payment_method_whitelist": ["visa", "mastercard"],
+    }
 
-#     print("Sending request to Chip-in API...")  # Debugging print
-#     response = request.post(url, json=payload, headers=headers)
-#     print(f"Chip-in API response status code: {response.status_code}")  # Debugging print
-#     print(f"Chip-in API response body: {response.text}") # Debugging print
+    headers = {
+        "Authorization": "Bearer nAzoWQCXaR04dtGVHh5iCcDpH6-sEKjZx5WbbDJoyKAbraK1MARW7y1FdRXCoHcK9vxB1BqJ3nLiOUndgIzSWg==",
+        "Content-Type": "application/json"
+    }
 
-#     # 2. Create the Purchase record
-#     if response.status_code == 201:
-#         print("Chip-in API call successful, creating Purchase record...")  # Debugging print
-#         db = Prisma()
-#         db.connect()
-#         print("Prisma database connected...") # Debugging print
-#         try:
-#             post = db.purchase.create(
-#                 data={
-#                     "orderId": dto.orderId,
-#                     "purchaseAmount": dto.purchaseAmount,
-#                 }
-#             )
-#             print("Purchase record created successfully.") #debugging print
-#             db.disconnect()
-#             print("Prisma database disconnected.") #debugging print
-#             return response.status_code, post, response.json()
-#         except Exception as e:
-#             print(f"Error creating Purchase record: {e}") # debugging print
-#             db.disconnect()
-#             return 500, {"error": "Database error"}, None
+    print("Sending request to Chip-in API...")  # Debugging print
+    response = requests.post(url, json=payload, headers=headers)
+    print(f"Chip-in API response status code: {response.status_code}")  # Debugging print
+    print(f"Chip-in API response body: {response.text}") # Debugging print
 
-#     print(f"Chip-in API call failed with status code: {response.status_code}") #debugging print
-#     return response.status_code, response.json()
+    purchase_url = response.json().get("checkout_url", "") if response.status_code == 201 else ""
+
+    transactionToken_cache[dto.transactionToken] = {
+        "purchaseUrl": purchase_url,
+        "message": "",
+        "status": "pending"
+    }
+
+    print("Purchase details saved in cache.")
+    return transactionToken_cache[dto.transactionToken]
 
 # @app.post("/success_callback")
 # async def purchase_success_callback(request: Request):
