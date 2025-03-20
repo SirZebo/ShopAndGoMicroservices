@@ -32,7 +32,6 @@ jobs:
     - name: Build
       run: npm run build --if-present
       
-    # Option 3: Conditional test
     - name: Run tests if available
       run: |
         if grep -q "\"test\":" package.json; then
