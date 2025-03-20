@@ -25,9 +25,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Change to frontend
-      run: ls -al
       
     - name: Install dependencies
       run: npm install
