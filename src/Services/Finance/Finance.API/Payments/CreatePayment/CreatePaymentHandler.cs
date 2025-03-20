@@ -60,7 +60,7 @@ public class CreatePaymentCommandHandler
         };
         //await publishEndpoint.Publish(commercePayStartedEvent, cancellationToken);
 
-        await httpClient.PostAsJsonAsync("https://localhost:6066/transaction/start", new 
+        await httpClient.PostAsJsonAsync("https://localhost:6066/transaction", new 
         { 
             PaymentId = payment.Id, 
             TransactionToken = payment.TransactionToken, 
