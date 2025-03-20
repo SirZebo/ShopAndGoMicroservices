@@ -1,16 +1,20 @@
+# Use an official Python runtime as the base image
 FROM python:3.11-slim
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy all files in the current directory into the container
-COPY . /app
+# Copy the requirements file into the container
+COPY requirements.txt .
 
-# Install dependencies listed in the requirements.txt
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port that Uvicorn will run on
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
 EXPOSE 8081
 
-# Run the application using Uvicorn
-CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8081"]
+# Command to run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8081"]
