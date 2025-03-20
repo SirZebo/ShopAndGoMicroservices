@@ -175,7 +175,7 @@ async def chip_success_callback(callback: PurchaseCallback):
     
     # Optionally, you could validate the signature here
 
-    return {"message": "Callback received successfully", "status": "success"
+    return {"message": "Callback received successfully", "status": "success"}
     
 # @app.post("/success_callback")                                                            
 # async def purchase_success_callback(request: Request):
