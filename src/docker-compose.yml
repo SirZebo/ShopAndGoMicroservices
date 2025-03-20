@@ -73,13 +73,13 @@ services:
       dockerfile: Services/Shipping/Shipping.API/Dockerfile
 
   chip.api:
-    build: 
-      context: .
-      dockerfile: Services/3rd_partyService/Dockerfile
-    command: sh -c "uvicorn main:app --reload --port=8081 --host=0.0.0.0"  # Corrected command
+    build:
+      context: ./Services/3rd_partyService  # Set the context to the 3rd_partyService directory
+      dockerfile: Dockerfile  # This points to the Dockerfile inside Services/3rd_partyService
+    command: sh -c "uvicorn main:app --reload --port=8081 --host=0.0.0.0"
     ports:
-      - 6006:8080 #http
-      - 6066:8081 #https
+      - "6006:8080"  # Mapping HTTP port
+      - "6066:8081"  # Mapping HTTPS port (ensure SSL is set up if you need HTTPS)
 
 volumes:
   postgres_catalog:
