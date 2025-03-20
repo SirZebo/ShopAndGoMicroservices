@@ -53,7 +53,7 @@ class CreatePurchaseDto(BaseModel):
     TransactionAmount: float
 
 class PurchaseSuccessDto(BaseModel):
-    TransactionToken: str
+    PaymentId: str
 
 # each transaction token has 3 values: tokenid, purchaseUrl, message, status
 
@@ -153,8 +153,12 @@ def purchase_success_callback(dto: PurchaseSuccessDto):
     #post into an endpoint to update the status of the transaction token
     #body 
     payload = {
-        "status": "success"
+        "PaymentId": dto.PaymentId 
     }
+    url ="https://localhost:6061/payments/receive"
+    
+    response = requests.post(url, json=payload)
+    return response.json()
 
 # @app.post("/success_callback")                                                            
 # async def purchase_success_callback(request: Request):
