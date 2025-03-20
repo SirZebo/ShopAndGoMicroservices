@@ -22,6 +22,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: check current directory files
+      run: ls -al
     - name: Run docker compose
       uses: hoverkraft-tech/compose-action@v2.0.1
       with:
