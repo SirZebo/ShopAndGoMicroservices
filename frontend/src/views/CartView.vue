@@ -26,7 +26,7 @@
 
       <div class="cart-total">
         <h3>Total: ${{ totalPrice.toFixed(2) }}</h3>
-        <router-link to="/checkout">
+        <router-link to="/enduser/checkout">
           <button>Checkout</button>
         </router-link>
       </div>

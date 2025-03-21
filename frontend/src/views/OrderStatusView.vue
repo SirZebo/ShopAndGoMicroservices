@@ -45,13 +45,23 @@ export default {
         status: "Pending", // Dynamic status based on order data
       },
       purchaseUrl: "", // Store the returned purchase URL
+      transactionToken: "" // Store transaction token
     };
+  },
+  created() {
+    // Retrieve transactionToken from query params or localStorage
+    this.transactionToken = this.$route.query.transactionToken || localStorage.getItem('transactionToken');
   },
   methods: {
     async getPurchaseUrl() {
+      if (!this.transactionToken) {
+        alert("Transaction token is missing.");
+        return;
+      }
+
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/getPurchaseUrl?transactionToken=efcb42e3-8883-4197-ac21-a82a9ddcbcf4"
+          `http://127.0.0.1:6006/getPurchaseUrl?transactionToken=${this.transactionToken}`
         );
 
         if (response.data.purchaseUrl) {
@@ -67,6 +77,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .order-status {

@@ -81,7 +81,7 @@ export default {
         creditCard: ''
       },
       userName: 'Test',
-      customerId: 'db7a48da-79b0-4a29-ba03-00deb540baec',
+      customerId: '58c49479-ec65-4de2-86e7-033c546291aa',
       merchantId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
       maxCompletionTime: '3.00:00:00',
       language: 'Malay',
@@ -128,8 +128,10 @@ export default {
         };
 
         const response = await axios.post('https://localhost:6060/product/checkout', orderData);
-        console.log('Transaction Token:', response.data.transactionToken);
-        this.$router.push('/order-status');
+        const transactionToken = response.data.transactionToken;
+
+        localStorage.setItem('transactionToken', transactionToken);
+        this.$router.push({ path: '/enduser/order-status', query: { transactionToken } });
       } catch (error) {
         console.error('Checkout failed:', error);
       }
