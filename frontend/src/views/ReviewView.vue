@@ -92,7 +92,7 @@ export default {
         this.reviewSubmitted = true;
 
         setTimeout(() => {
-          this.$router.push('/review-list'); // Redirect after update
+          this.$router.push('/enduser/review-list'); // Redirect after update
         }, 1500);
       } catch (error) {
         console.error("Error updating review:", error);

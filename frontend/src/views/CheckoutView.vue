@@ -81,8 +81,6 @@ export default {
         creditCard: ''
       },
       userName: 'Test',
-      customerId: '58c49479-ec65-4de2-86e7-033c546291aa',
-      merchantId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
       maxCompletionTime: '3.00:00:00',
       language: 'Malay',
       emailAddress: ''
@@ -109,9 +107,9 @@ export default {
         const orderData = {
           CheckoutProductDto: {
             userName: this.userName,
-            CustomerId: this.customerId,
+            CustomerId: '58c49479-ec65-4de2-86e7-033c546291aa',
             ProductId: '4f136e9f-ff8c-4c1f-9a33-d12f689bdab8',
-            MerchantId: this.merchantId,
+            MerchantId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
             Price: this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
             Quantity: this.cartItems.reduce((total, item) => total + item.quantity, 0),
             totalPrice: this.totalPrice,

@@ -57,7 +57,7 @@ export default {
       return product ? product.name : "Unknown Product";
     },
     viewReview(id) {
-      this.$router.push(`/review/${id}`);
+      this.$router.push(`/enduser/review/${id}`);
     }
   }
 };

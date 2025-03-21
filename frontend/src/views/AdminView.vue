@@ -43,7 +43,7 @@ export default {
   methods: {
     async fetchDisputes() {
       try {
-        const response = await axios.get('https://localhost:6065/disputes');
+        const response = await axios.get('https://localhost:6065/reviews/customer/58c49479-ec65-4de2-86e7-033c546291aa?pageNumber=1&pageSize=5');
         this.disputesUnderReview = response.data.reviews.map(dispute => ({
           id: dispute.id,
           body: dispute.body
