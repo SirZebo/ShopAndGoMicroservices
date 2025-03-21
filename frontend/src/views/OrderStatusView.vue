@@ -39,18 +39,24 @@ export default {
   data() {
     return {
       order: {
-        name: "Huawei Plus",
-        price: 650.00,
-        quantity: 1,
-        status: "Pending", // Dynamic status based on order data
+        name: "",
+        price: 0,
+        quantity: 0,
+        status: "Pending", // Default status
       },
-      purchaseUrl: "", // Store the returned purchase URL
-      transactionToken: "" // Store transaction token
+      purchaseUrl: "",
+      transactionToken: ""
     };
   },
   created() {
     // Retrieve transactionToken from query params or localStorage
     this.transactionToken = this.$route.query.transactionToken || localStorage.getItem('transactionToken');
+
+    // Retrieve order details from localStorage
+    const storedOrder = localStorage.getItem('orderDetails');
+    if (storedOrder) {
+      this.order = { ...this.order, ...JSON.parse(storedOrder) };
+    }
   },
   methods: {
     async getPurchaseUrl() {
