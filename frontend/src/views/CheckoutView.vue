@@ -101,7 +101,7 @@ export default {
         const orderData = {
           CheckoutProductDto: {
             userName: this.userName,
-            CustomerId: '58c49479-ec65-4de2-86e7-033c546291aa',
+            CustomerId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
             ProductId: '4f136e9f-ff8c-4c1f-9a33-d12f689bdab8',
             MerchantId: '189dc8dc-990f-48e0-a37b-e6f2b60b9d7d',
             Price: this.totalPrice,
