@@ -11,7 +11,22 @@
         <h3>{{ review.body }}</h3>
         <p><strong>Order Item:</strong> {{ getProductName(review.order.productId) }}</p>
         <p><strong>Order Quantity:</strong> {{ review.order.quantity }}</p>
-        <button @click="viewReview(review.id)">View Review</button>
+        
+        <!-- Show feedback status -->
+        <p>
+          <strong>Feedback Status:</strong> 
+          <span :class="getFeedbackClass(review.feedbackStatus)">
+            {{ getFeedbackStatus(review.feedbackStatus) }}
+          </span>
+        </p>
+
+        <!-- Disable button if feedbackStatus is already set to Complain or Satisfied -->
+        <button 
+          @click="viewReview(review.id)" 
+          :disabled="review.feedbackStatus !== 1"
+        >
+          {{ review.feedbackStatus === 1 ? "View Review" : "Already Reviewed" }}
+        </button>
       </div>
 
       <!-- If no reviews are available -->
@@ -39,13 +54,13 @@ export default {
     async fetchData() {
       try {
         const [reviewsResponse, productsResponse] = await Promise.all([
-          axios.get("https://localhost:6065/reviews/customer/58c49479-ec65-4de2-86e7-033c546291aa?pageNumber=1&pageSize=5"),
+          axios.get("https://localhost:6065/reviews/customer/189dc8dc-990f-48e0-a37b-e6f2b60b9d7d?pageNumber=1&pageSize=5"),
           axios.get("https://localhost:6060/products?pageNumber=1&pageSize=10"),
         ]);
 
         this.reviews = reviewsResponse.data.reviews || [];
         this.products = productsResponse.data.products || [];
-        console.log(this.reviews)
+        console.log(this.reviews);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -55,6 +70,19 @@ export default {
     getProductName(productId) {
       const product = this.products.find(p => p.id === productId);
       return product ? product.name : "Unknown Product";
+    },
+    getFeedbackStatus(status) {
+      if (status === 1) return "Pending Review";
+      if (status === 2) return "Complain";
+      if (status === 3) return "Satisfied";
+      return "Unknown";
+    },
+    getFeedbackClass(status) {
+      return {
+        'pending': status === 1,
+        'complain': status === 2,
+        'satisfied': status === 3
+      };
     },
     viewReview(id) {
       this.$router.push(`/enduser/review/${id}`);
@@ -103,7 +131,28 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
   background-color: #2a333d;
+}
+
+/* Feedback Status Styling */
+.pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.complain {
+  color: red;
+  font-weight: bold;
+}
+
+.satisfied {
+  color: green;
+  font-weight: bold;
 }
 </style>
