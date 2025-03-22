@@ -45,6 +45,36 @@ internal class InitialData
             order2.Add(ProductId.Of(new Guid("4f136e9f-ff8c-4c1f-9a33-d12f689bdab8")), 1, 650);
             order2.Add(ProductId.Of(new Guid("6ec1297b-ec0a-4aa1-be25-6726e3b51a27")), 2, 450);
 
+            var order3 = Order.Create(
+                            OrderId.Of(new Guid("3a34ff51-6106-46b4-84fb-de34e0938867")),
+                            CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")),
+                            new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                            Guid.NewGuid(),
+                            OrderName.Of("ORD_2"),
+                            shippingAddress: address2,
+                            TimeSpan.FromDays(5));
+            order2.Add(ProductId.Of(new Guid("4f136e9f-ff8c-4c1f-9a33-d12f689bdab8")), 1, 650);
+
+            var order4 = Order.Create(
+                            OrderId.Of(new Guid("19ac9cce-f730-41f9-8872-a75ef9c463fa")),
+                            CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")),
+                            new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                            Guid.NewGuid(),
+                            OrderName.Of("ORD_2"),
+                            shippingAddress: address2,
+                            TimeSpan.FromDays(7));
+            order2.Add(ProductId.Of(new Guid("4f136e9f-ff8c-4c1f-9a33-d12f689bdab8")), 1, 650);
+
+            var order5 = Order.Create(
+                            OrderId.Of(new Guid("5805c332-ec79-4d6e-a48f-e685d10f0042")),
+                            CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")),
+                            new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d"),
+                            Guid.NewGuid(),
+                            OrderName.Of("ORD_2"),
+                            shippingAddress: address2,
+                            TimeSpan.FromDays(7));
+            order2.Add(ProductId.Of(new Guid("4f136e9f-ff8c-4c1f-9a33-d12f689bdab8")), 1, 650);
+
             return new List<Order> { order1, order2 };
         }
     }

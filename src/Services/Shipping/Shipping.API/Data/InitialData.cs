@@ -74,13 +74,13 @@ public class InitialData : IInitialData
                     Quantity = 1,
                     OrderDeadline = DateTime.UtcNow.AddDays(3),
                     Language = "Malay",
-                    FirstName = "John", 
-                    LastName = "Snow", 
+                    FirstName = "john", 
+                    LastName = "doe", 
                     EmailAddress = "john@gmail.com", 
-                    AddressLine = "Paya Lebar Blk 123", 
-                    Country = "Singapore", 
-                    State = "Singapore", 
-                    ZipCode = "123456"
+                    AddressLine = "Broadway No:1", 
+                    Country = "England", 
+                    State = "Nottingham", 
+                    ZipCode = "08050"
                 },
                 new Order()
                 {
@@ -91,13 +91,13 @@ public class InitialData : IInitialData
                     Quantity = 1,
                     OrderDeadline = DateTime.UtcNow.AddDays(3),
                     Language = "Malay",
-                    FirstName = "John",
-                    LastName = "Snow",
+                    FirstName = "john",
+                    LastName = "doe",
                     EmailAddress = "john@gmail.com",
-                    AddressLine = "Paya Lebar Blk 123",
-                    Country = "Singapore",
-                    State = "Singapore",
-                    ZipCode = "123456"
+                    AddressLine = "Broadway No:1",
+                    Country = "England",
+                    State = "Nottingham",
+                    ZipCode = "08050"
                 },
                 new Order()
                 {
@@ -108,13 +108,13 @@ public class InitialData : IInitialData
                     Quantity = 1,
                     OrderDeadline = DateTime.UtcNow.AddDays(3),
                     Language = "Malay",
-                    FirstName = "John",
-                    LastName = "Snow",
+                    FirstName = "john",
+                    LastName = "doe",
                     EmailAddress = "john@gmail.com",
-                    AddressLine = "Paya Lebar Blk 123",
-                    Country = "Singapore",
-                    State = "Singapore",
-                    ZipCode = "123456"
+                    AddressLine = "Broadway No:1",
+                    Country = "England",
+                    State = "Nottingham",
+                    ZipCode = "08050"
                 },
                 
             };
