@@ -11,6 +11,7 @@
       <router-link to="/enduser/products" class="nav-link">Products</router-link>
       <router-link to="/enduser/review-list" class="nav-link">Reviews</router-link>
       <router-link to="/enduser/profile" class="nav-link">Profile</router-link>
+      <router-link to="/enduser/order" class="nav-link">Order</router-link>
       <router-link to="/enduser/cart" class="cart-link">
         Cart <span class="cart-count">{{ cartCount }}</span>
       </router-link>

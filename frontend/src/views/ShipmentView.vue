@@ -92,17 +92,26 @@ export default {
       }
 
       try {
-        await axios.put(`https://localhost:6062/shipments/${this.selectedShipment.id}`, {
-          trackingTransactionHash: this.shipmentTx,
+        const response = await axios.put(`https://localhost:6062/shipments`, {
+          TrackingNumber: this.shipmentTx,
+          Id: this.selectedShipment.id, // Include shipment ID
         });
 
         this.submissionSuccess = true;
         this.shipmentTx = ""; // Clear input field after successful submission
+
+        alert(`Response: ${response.data.message || "Shipment updated successfully!"}`);
+
+        // Refresh the page after a short delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } catch (error) {
         console.error("Error updating shipment:", error);
-        alert("Failed to update shipment. Please try again.");
+        alert(`Failed to update shipment. Error: ${error.response?.data?.message || error.message}`);
       }
     }
+
   }
 };
 </script>
