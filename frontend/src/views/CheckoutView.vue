@@ -48,12 +48,6 @@
         <input type="text" id="postalCode" v-model="shippingInfo.postalCode" required />
       </div>
 
-      <h2>Payment Information</h2>
-      <div class="form-group">
-        <label for="creditCard">Credit Card</label>
-        <input type="text" id="creditCard" v-model="paymentInfo.creditCard" required />
-      </div>
-
       <div class="form-actions">
         <button type="submit" class="place-order-button">Place Order</button>
       </div>
