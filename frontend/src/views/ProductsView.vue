@@ -6,7 +6,6 @@
     <!-- Show products only when they are loaded -->
     <div v-else class="product-list">
       <div v-for="product in products" :key="product.id" class="product-item">
-        <img :src="`/assets/${product.imageFile}`" :alt="product.name" class="product-image" />
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
