@@ -7,7 +7,6 @@
     <div class="order-details">
       <h3>Order Summary</h3>
       <div v-for="item in orderItems" :key="item.id" class="order-item">
-        <img :src="`/assets/${item.imageFile}`" alt="product name" class="order-item-image" />
         <div class="order-item-info">
           <h4>{{ item.name }}</h4>
           <p>Quantity: {{ item.quantity }}</p>
