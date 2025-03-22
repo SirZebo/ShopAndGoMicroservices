@@ -28,6 +28,15 @@ public class CatalogInitialData : IInitialData
                 },
                 new Product()
                 {
+                    Id = new Guid("63638528-2da5-4097-bc54-0630e2ac9b05"),
+                    Name = "IPhone 16",
+                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    ImageFile = "product-1.png",
+                    Price = 600.00M,
+                    Category = new List<string> { "Smart Phone" }
+                },
+                new Product()
+                {
                     Id = new Guid("c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914"),
                     Name = "Samsung 10",
                     Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
