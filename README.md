@@ -1,1 +1,1 @@
-# EShopMicroservices
+# ShopAndGoMicroservices
